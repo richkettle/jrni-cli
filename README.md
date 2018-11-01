@@ -1,1 +1,21 @@
 # bookingbug-panel-transpiler
+
+## Installation 
+
+```npm install -g bookingbug-panel-transpiler```
+
+## Panel package requirements
+
+- must have entry.js file which can use glob imports, example content:
+    ```import './vidyo_panel/**/!(*.spec).js';```
+
+- must have manifest.json file which specifies 'unique_name' property    
+
+## Usage 
+Go to the root of you khufu project and trigger following command: 
+
+```panel-transpiler```
+         
+
+
+    
