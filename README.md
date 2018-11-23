@@ -1,8 +1,8 @@
-# bookingbug-panel-transpiler
+# bbug-apps-cli
 
 ## Installation 
 
-```npm install -g bookingbug-panel-transpiler```
+```npm install -g bbug-apps-cli```
 
 ## Panel package requirements
 
@@ -14,7 +14,7 @@
 ## Usage 
 Go to the root of you khufu project and trigger following command: 
 
-```panel-transpiler```
+```bbug-apps-cli```
          
 
 

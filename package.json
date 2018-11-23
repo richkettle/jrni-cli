@@ -1,7 +1,7 @@
 {
-  "name": "@bookingbug/panel-transpiler",
+  "name": "@bookingbug/bbug-apps-cli",
   "version": "1.0.0",
-  "description": "Bookingbug panel transpiler",
+  "description": "BookingBug Apps CLI",
   "main": "index.js",
   "bin": "./index.js",
   "scripts": {
@@ -9,15 +9,12 @@
   },
   "keywords": [
     "bookingbug",
-    "panel",
-    "transpiler"
+    "apps"
   ],
   "author": "dev@bookingbug.com",
   "license": "ISC",
   "dependencies": {
-    "webpack": "~4.23.1",
-    "webpackbar": "~2.6.3",
-    "ng-annotate-loader": "~0.6.1",
+    "archiver": "^3.0.0",
     "babel-core": "~6.26.3",
     "babel-eslint": "~10.0.1",
     "babel-loader": "~7.1.5",
@@ -26,21 +23,25 @@
     "babel-plugin-transform-object-rest-spread": "~6.26.0",
     "babel-plugin-transform-optional-catch-binding": "~7.0.0-alpha.16",
     "babel-preset-env": "~1.7.0",
-    "import-glob-loader": "~1.1.0",
+    "chalk": "~2.4.1",
     "clean-webpack-plugin": "~0.1.19",
-    "path": "~0.12.7",
     "css-loader": "~1.0.1",
     "fast-sass-loader": "~1.4.6",
-    "sass-loader": "~7.1.0",
-    "inject-sass-imports-loader": "~1.0.5",
-    "node-sass": "~4.9.4",
-    "ng-cache-loader": "~0.0.26",
     "file-loader": "~2.0.0",
-    "url-loader": "~1.1.2",
-    "resolve-url-loader": "~3.0.0",
-    "style-loader": "~0.23.1",
+    "form-data": "^2.3.3",
+    "import-glob-loader": "~1.1.0",
+    "inject-sass-imports-loader": "~1.0.5",
     "mini-css-extract-plugin": "~0.4.4",
-    "yargs": "~12.0.2",
-    "chalk": "~2.4.1"
+    "ng-annotate-loader": "~0.6.1",
+    "ng-cache-loader": "~0.0.26",
+    "node-sass": "~4.9.4",
+    "path": "~0.12.7",
+    "resolve-url-loader": "~3.0.0",
+    "sass-loader": "~7.1.0",
+    "style-loader": "~0.23.1",
+    "url-loader": "~1.1.2",
+    "webpack": "~4.23.1",
+    "webpackbar": "~2.6.3",
+    "yargs": "~12.0.2"
   }
 }
