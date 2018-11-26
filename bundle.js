@@ -2,12 +2,10 @@ const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const Configuration = require('./configuration');
 const path = require('path');
 
-bundle = (cb) => {
-    const projectRootPath = process.cwd();
-    const configuration = new Configuration(projectRootPath);
+bundle = (configuration, cb) => {
+    const projectRootPath = configuration.rootPath;
     process.chdir(__dirname);
 
     const config = {

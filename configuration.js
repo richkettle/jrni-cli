@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 class Configuration {
-    constructor(rootPath) {
+    constructor(rootPath, argv) {
 
         this.rootPath = rootPath;
 
@@ -14,7 +14,12 @@ class Configuration {
 
         this._validateManifest();
 
-        this._validateAllowedOptions();
+        this.host = argv.host;
+        this.companyId = argv.companyId.toString();
+        this.port = argv.port;
+        this.appId = argv.appId;
+        this.authToken = argv.authToken;
+        this.dev = argv.dev;
     }
 
     _validatePanelStructure(){
@@ -36,41 +41,9 @@ class Configuration {
         }
     }
 
-    _validateAllowedOptions() {
-        const options = Object.assign({}, Configuration.allowedOptions, {
-            _: 'required by argv',
-            $0: 'required by argv',
-            help: 'required by argv',
-            version: 'required by argv'
-        });
-
-        for (const prop in argv) {
-            if (options[prop] !== undefined) continue;
-            this._displayNotAllowedOptionMsg(prop);
-            this._displayAllowedOptions();
-            process.exit(0);
-        }
-    }
-
-    _displayNotAllowedOptionMsg(notAllowedOption) {
-        console.log(chalk.red(`\n"--${notAllowedOption}" is not recognized option\n`));
-    }
-
-    _displayAllowedOptions() {
-        console.log('Allowed options:')
-        for (const option in Configuration.allowedOptions) {
-            console.log(`   --${chalk.green(option)} : ${Configuration.allowedOptions[option]}`);
-        }
-        console.log('\n');
-    }
-
     isDev(){
-        return typeof argv.dev !== 'undefined';
+        this.dev === true;
     }
 }
-
-Configuration.allowedOptions = {
-    dev: 'Do not apply production optimisations'
-};
 
 module.exports = Configuration;

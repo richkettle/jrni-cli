@@ -2,7 +2,7 @@
 
 ## Installation 
 
-```npm install -g bbug-apps-cli```
+```npm install -g```
 
 ## Panel package requirements
 
@@ -15,7 +15,4 @@
 Go to the root of you khufu project and trigger following command: 
 
 ```bbug-apps-cli```
-         
 
-
-    
