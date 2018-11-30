@@ -18,6 +18,7 @@ class Configuration {
         this.companyId = argv.companyId.toString();
         this.port = argv.port;
         this.appId = argv.appId;
+        this.appKey = argv.appKey;
         this.authToken = argv.authToken;
         this.dev = argv.dev;
     }

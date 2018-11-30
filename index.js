@@ -55,6 +55,10 @@ yargs
                 describe: 'App-Id to use for app install',
                 type: 'string'
             })
+            .option('app-key', {
+                describe: 'App-Key to use for app install',
+                type: 'string'
+            })
             .option('auth-token', {
                 demandOption: true,
                 describe: 'Auth-Token to use for app install',

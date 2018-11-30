@@ -9,12 +9,14 @@ install = (configuration, cb) => {
     const form = new FormData();
     form.append('file', readStream);
     const options = {
+        protocol: configuration.port === 443 ? 'https:' : 'http:',
         host: configuration.host,
         port: configuration.port || 443,
         path: `/api/v1/admin/${configuration.companyId}/apps`,
         method: 'POST',
         headers: {
             'App-Id': configuration.appId,
+            'App-Key': configuration.appKey,
             'Auth-Token': configuration.authToken
         }
     }
