@@ -21,6 +21,7 @@ class Configuration {
         this.appKey = argv.appKey;
         this.authToken = argv.authToken;
         this.dev = argv.dev;
+        this.name = this.manifest.unique_name;
     }
 
     _validatePanelStructure(){

@@ -12,8 +12,8 @@ install = (configuration, cb) => {
         protocol: configuration.port === 443 ? 'https:' : 'http:',
         host: configuration.host,
         port: configuration.port || 443,
-        path: `/api/v1/admin/${configuration.companyId}/apps`,
-        method: 'POST',
+        path: `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}`,
+        method: 'PUT',
         headers: {
             'App-Id': configuration.appId,
             'App-Key': configuration.appKey,
