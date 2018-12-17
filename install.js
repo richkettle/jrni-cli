@@ -16,7 +16,6 @@ install = (configuration, cb) => {
         method: 'PUT',
         headers: {
             'App-Id': configuration.appId,
-            'App-Key': configuration.appKey,
             'Auth-Token': configuration.authToken
         }
     }
