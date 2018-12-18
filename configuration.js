@@ -14,14 +14,20 @@ class Configuration {
 
         this._validateManifest();
 
-        this.host = argv.host;
-        this.companyId = argv.companyId.toString();
-        this.port = argv.port;
-        this.appId = argv.appId;
-        this.appKey = argv.appKey;
-        this.authToken = argv.authToken;
+        let config = {};
+        try {
+            config = fs.lstatSync('./.bbugrc').isFile() ? JSON.parse(fs.readFileSync('./.bbugrc')): {};
+        } catch(err) {
+        }
+
+        this.email = config.email || argv.email;
+        this.password = config.password || argv.password;
+        this.host = config.host || argv.host;
+        this.companyId = argv.companyId ? argv.companyId.toString() : config.companyId;
+        this.port = config.port || argv.port;
         this.dev = argv.dev;
         this.name = this.manifest.unique_name;
+        this.appId = '302e48d75f4b55016aaf2c81f5ddf80f039e3f863277';
     }
 
     _validatePanelStructure(){
@@ -45,6 +51,10 @@ class Configuration {
 
     isDev(){
         this.dev === true;
+    }
+
+    isValid() {
+        return this.email && this.password && this.host;
     }
 }
 

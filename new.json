@@ -1,0 +1,10 @@
+{
+  "name": {
+    "describe": "Name used to identify app",
+    "type": "string"
+  },
+  "author": {
+    "describe": "Your name",
+    "type": "string"
+  }
+}
