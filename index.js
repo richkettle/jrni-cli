@@ -4,7 +4,9 @@ const bundle = require('./bundle');
 const zip = require('./zip');
 const install = require('./install');
 const authenticate = require('./authenticate');
+const initialize = require('./initialize');
 const Configuration = require('./configuration');
+const newOptions = require('./new.json');
 
 const chalk = require('chalk');
 const yargs = require('yargs');
@@ -37,7 +39,7 @@ const packageAndInstall = (argv) => {
     });
 }
 
-const builder = {
+const installBuilder = {
     email: {
         describe: 'Email address used to log into BookingBug',
         type: 'string'
@@ -64,8 +66,18 @@ const builder = {
     }
 }
 
+const newBuilder = (newYargs) => {
+    newYargs
+        .positional('dir', {
+            describe: 'Destination directory',
+            type: 'string'
+        })
+        .options(newOptions)
+}
+
 yargs
     .usage('Usage: $0 <command>')
-    .command('$0', 'Package and install app', builder, packageAndInstall)
+    .command('$0', 'Package and install app', installBuilder, packageAndInstall)
+    .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .argv;
 
