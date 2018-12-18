@@ -23,7 +23,7 @@ class Configuration {
         this.email = config.email || argv.email;
         this.password = config.password || argv.password;
         this.host = config.host || argv.host;
-        this.companyId = config.companyId || argv.companyId && argv.companyId.toString();
+        this.companyId = argv.companyId ? argv.companyId.toString() : config.companyId;
         this.port = config.port || argv.port;
         this.dev = argv.dev;
         this.name = this.manifest.unique_name;
