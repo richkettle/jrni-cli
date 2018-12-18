@@ -7,6 +7,7 @@ const authenticate = require('./authenticate');
 const initialize = require('./initialize');
 const Configuration = require('./configuration');
 const newOptions = require('./new.json');
+const configureApp = require('./configure-app');
 
 const chalk = require('chalk');
 const yargs = require('yargs');
@@ -17,22 +18,31 @@ const packageAndInstall = (argv) => {
     if (!configuration.isValid()) {
         return yargs.showHelp();
     }
-    console.log('Started authorization');
-    authenticate(configuration, function (err) {
-        if (err) return console.log(chalk.red(err));
-        console.log('Completed authorization');
-        console.log('Started webpack bundle');
-        bundle(configuration, function (err) {
+    configuration.promptConfig().then(() => {
+        console.log('Started authorization');
+        authenticate(configuration, function (err) {
             if (err) return console.log(chalk.red(err));
-            console.log('Completed webpack bundle');
-            console.log('Started zip');
-            zip(function (err) {
+            console.log('Completed authorization');
+            console.log('Started webpack bundle');
+            bundle(configuration, function (err) {
                 if (err) return console.log(chalk.red(err));
-                console.log('Completed zip');
-                console.log('Started install');
-                install(configuration, function (err) {
+                console.log('Completed webpack bundle');
+                console.log('Started zip');
+                zip(function (err) {
                     if (err) return console.log(chalk.red(err));
-                    console.log('Completed install');
+                    console.log('Completed zip');
+                    console.log('Started install');
+                    install(configuration, function (err) {
+                        if (err) return console.log(chalk.red(err));
+                        console.log('Completed install');
+                        if (configuration.appConfig) {
+                            console.log('Started config');
+                            configureApp(configuration, function (err) {
+                                if (err) return console.log(chalk.red(err));
+                                console.log('Completed config');
+                            });
+                        }
+                    });
                 });
             });
         });

@@ -23,6 +23,7 @@
     "babel-plugin-transform-object-rest-spread": "~6.26.0",
     "babel-plugin-transform-optional-catch-binding": "~7.0.0-alpha.16",
     "babel-preset-env": "~1.7.0",
+    "bookingbug-core-js": "^1.1.1",
     "chalk": "~2.4.1",
     "clean-webpack-plugin": "~0.1.19",
     "css-loader": "~1.0.1",

@@ -1,7 +1,8 @@
 const argv = require('yargs').argv;
 const chalk = require('chalk');
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
+const inquirer = require('inquirer');
 
 class Configuration {
     constructor(rootPath, argv) {
@@ -55,6 +56,33 @@ class Configuration {
 
     isValid() {
         return this.email && this.password && this.host;
+    }
+
+    _mapSchemaToQuestions(schema) {
+        return Object.entries(schema.properties).reduce((list, pair) => {
+            const [name, item] = pair;
+            list.push({
+                type: 'input',
+                name: name,
+                message: item.description
+            });
+            return list
+        }, []);
+    }
+
+    promptConfig() {
+        return new Promise((resolve, reject) => {
+            const configSchema = fs.readJsonSync('./config.json', { throws: false });
+            if (configSchema) {
+                const questions = this._mapSchemaToQuestions(configSchema);
+                inquirer.prompt(questions).then(answers => {
+                    this.appConfig = answers;
+                    resolve()
+                }, reject);
+            } else {
+                resolve();
+            }
+        })
     }
 }
 
