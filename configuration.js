@@ -3,6 +3,8 @@ const chalk = require('chalk');
 const fs = require('fs-extra');
 const path = require('path');
 const inquirer = require('inquirer');
+const Ajv = require('ajv');
+const ajv = new Ajv({verbose: true});
 
 class Configuration {
     constructor(rootPath, argv) {
@@ -54,10 +56,6 @@ class Configuration {
         this.dev === true;
     }
 
-    isValid() {
-        return this.email && this.password && this.host;
-    }
-
     _mapSchemaToQuestions(schema) {
         return Object.entries(schema.properties).reduce((list, pair) => {
             const [name, item] = pair;
@@ -74,6 +72,10 @@ class Configuration {
         return new Promise((resolve, reject) => {
             const configSchema = fs.readJsonSync('./config.json', { throws: false });
             if (configSchema) {
+                if (!configSchema.properties) {
+                    console.log(chalk.yellow('[WARN] config.json has no properties'));
+                    resolve();
+                }
                 const questions = this._mapSchemaToQuestions(configSchema);
                 inquirer.prompt(questions).then(answers => {
                     this.appConfig = answers;
@@ -83,6 +85,19 @@ class Configuration {
                 resolve();
             }
         })
+    }
+
+    validate(cb) {
+        if (this.email && this.password && this.host) {
+            const configSchema = fs.readJsonSync('./config.json', { throws: false });
+            if (ajv.validateSchema(configSchema)) {
+                cb(null)
+            } else {
+                cb('config.json is not valid json schema');
+            }
+        } else {
+            cb('Missing auth');
+        }
     }
 }
 

@@ -15,33 +15,37 @@ const yargs = require('yargs');
 const packageAndInstall = (argv) => {
     const projectRootPath = process.cwd();
     const configuration = new Configuration(projectRootPath, argv);
-    if (!configuration.isValid()) {
-        return yargs.showHelp();
-    }
-    configuration.promptConfig().then(() => {
-        console.log('Started authorization');
-        authenticate(configuration, function (err) {
-            if (err) return console.log(chalk.red(err));
-            console.log('Completed authorization');
-            console.log('Started webpack bundle');
-            bundle(configuration, function (err) {
+    configuration.validate(function (err) {
+        if (err === 'Missing auth') {
+            return yargs.showHelp();
+        } else if (err) {
+            return console.log(chalk.red(err));
+        }
+        configuration.promptConfig().then(() => {
+            console.log('Started authorization');
+            authenticate(configuration, function (err) {
                 if (err) return console.log(chalk.red(err));
-                console.log('Completed webpack bundle');
-                console.log('Started zip');
-                zip(function (err) {
+                console.log('Completed authorization');
+                console.log('Started webpack bundle');
+                bundle(configuration, function (err) {
                     if (err) return console.log(chalk.red(err));
-                    console.log('Completed zip');
-                    console.log('Started install');
-                    install(configuration, function (err) {
+                    console.log('Completed webpack bundle');
+                    console.log('Started zip');
+                    zip(function (err) {
                         if (err) return console.log(chalk.red(err));
-                        console.log('Completed install');
-                        if (configuration.appConfig) {
-                            console.log('Started config');
-                            configureApp(configuration, function (err) {
-                                if (err) return console.log(chalk.red(err));
-                                console.log('Completed config');
-                            });
-                        }
+                        console.log('Completed zip');
+                        console.log('Started install');
+                        install(configuration, function (err) {
+                            if (err) return console.log(chalk.red(err));
+                            console.log('Completed install');
+                            if (configuration.appConfig) {
+                                console.log('Started config');
+                                configureApp(configuration, function (err) {
+                                    if (err) return console.log(chalk.red(err));
+                                    console.log('Completed config');
+                                });
+                            }
+                        });
                     });
                 });
             });
