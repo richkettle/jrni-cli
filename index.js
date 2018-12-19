@@ -7,32 +7,46 @@ const authenticate = require('./authenticate');
 const initialize = require('./initialize');
 const Configuration = require('./configuration');
 const newOptions = require('./new.json');
+const configureApp = require('./configure-app');
+const logger = require('./logger');
 
-const chalk = require('chalk');
 const yargs = require('yargs');
 
 const packageAndInstall = (argv) => {
     const projectRootPath = process.cwd();
     const configuration = new Configuration(projectRootPath, argv);
-    if (!configuration.isValid()) {
-        return yargs.showHelp();
-    }
-    console.log('Started authorization');
-    authenticate(configuration, function (err) {
-        if (err) return console.log(chalk.red(err));
-        console.log('Completed authorization');
-        console.log('Started webpack bundle');
-        bundle(configuration, function (err) {
-            if (err) return console.log(chalk.red(err));
-            console.log('Completed webpack bundle');
-            console.log('Started zip');
-            zip(function (err) {
-                if (err) return console.log(chalk.red(err));
-                console.log('Completed zip');
-                console.log('Started install');
-                install(configuration, function (err) {
-                    if (err) return console.log(chalk.red(err));
-                    console.log('Completed install');
+    configuration.validate(function (err) {
+        if (err === 'Missing auth') {
+            return yargs.showHelp();
+        } else if (err) {
+            return logger.fatal(err);
+        }
+        configuration.promptConfig().then(() => {
+            logger.info('Started authorization');
+            authenticate(configuration, function (err) {
+                if (err) return logger.fatal(err);
+                logger.info('Completed authorization');
+                logger.info('Started webpack bundle');
+                bundle(configuration, function (err) {
+                    if (err) return logger.fatal(err);
+                    logger.info('Completed webpack bundle');
+                    logger.info('Started zip');
+                    zip(function (err) {
+                        if (err) return logger.fatal(err);
+                        logger.info('Completed zip');
+                        logger.info('Started install');
+                        install(configuration, function (err) {
+                            if (err) return logger.fatal(err);
+                            logger.info('Completed install');
+                            if (configuration.appConfig) {
+                                logger.info('Started config');
+                                configureApp(configuration, function (err) {
+                                    if (err) return logger.fatal(err);
+                                    logger.info('Completed config');
+                                });
+                            }
+                        });
+                    });
                 });
             });
         });

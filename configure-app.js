@@ -1,21 +1,17 @@
 const https = require('https');
 const http = require('http');
 
-const fs = require('fs');
-
-const authenticate = (configuration, cb) => {
-    const data = JSON.stringify({
-        email: configuration.email,
-        password: configuration.password
-    });
+module.exports = (configuration, cb) => {
+    const data = JSON.stringify(configuration.appConfig);
     const protocol = configuration.port === 443 ? https : http;
     const options = {
         host: configuration.host,
         port: configuration.port || 443,
-        path: `/api/v1/login/admin/${configuration.companyId}`,
+        path: `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}/configure`,
         method: 'POST',
         headers: {
             'App-Id': configuration.appId,
+            'Auth-Token': configuration.authToken,
             'Content-Type': 'application/json',
             'Content-Length': data.length
         }
@@ -30,19 +26,9 @@ const authenticate = (configuration, cb) => {
             cb(error);
         })
         response.on('end', () => {
-            console.log(output)
             const json = JSON.parse(output);
             if (statusCode >= 200 && statusCode <= 300) {
-                configuration.authToken = json.auth_token;
-                configuration.companyId = json.company_id;
-                const credentials = JSON.stringify({
-                    email: configuration.email,
-                    password: configuration.password,
-                    companyId: json.company_id,
-                    host: configuration.host,
-                    port: configuration.port
-                }, null, 2);
-                fs.writeFile('./.bbugrc', credentials, cb);
+                cb(null, json);
             } else if (json.error) {
                 cb(json.error);
             } else {
@@ -53,5 +39,3 @@ const authenticate = (configuration, cb) => {
     request.write(data);
     request.end();
 }
-
-module.exports = authenticate;

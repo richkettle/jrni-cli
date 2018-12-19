@@ -1,13 +1,9 @@
 const fs = require('fs-extra');
 const path = require('path');
-const chalk = require('chalk');
 const inquirer = require('inquirer');
 
 const newOptions = require('./new.json');
-
-const log = (message) => {
-    console.log(chalk.blue(message));
-}
+const logger = require('./logger');
 
 const questions = Object.entries(newOptions).reduce((list, pair) => {
     const [name, question] = pair;
@@ -24,7 +20,7 @@ const filterQuestions = (argv) => {
 }
 
 const createFiles = (argv) => {
-    log('Started new app');
+    logger.info('Started new app');
     fs.mkdirpSync(argv.dir);
     const manifest = {
         bbAppManifestVersion: '1.0',
@@ -36,7 +32,7 @@ const createFiles = (argv) => {
         liquid: []
     }
     fs.outputJsonSync(path.join(argv.dir,'manifest.json'), manifest, {spaces: 2});
-    log('Completed new app');
+    logger.info('Completed new app');
 }
 
 module.exports = (argv) => {
