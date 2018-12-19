@@ -8,7 +8,6 @@ const logger = require('./logger');
 
 bundle = (configuration, cb) => {
     const projectRootPath = configuration.rootPath;
-    process.chdir(__dirname);
 
     const config = {
         context: process.cwd(),
@@ -108,8 +107,7 @@ bundle = (configuration, cb) => {
 
     webpack(config, (err, stats) => {
         if (err) cb(err);
-        logger.info('webpack', stats.toString());
-        process.chdir(projectRootPath);
+        logger.info(`webpack ${stats.toString()}`);
         cb();
     });
 }

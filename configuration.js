@@ -19,9 +19,10 @@ class Configuration {
 
         this._validateManifest();
 
+        this.bbugrcPath = path.join(process.cwd(), '.bbugrc');
         let config = {};
         try {
-            config = fs.lstatSync('./.bbugrc').isFile() ? JSON.parse(fs.readFileSync('./.bbugrc')): {};
+            config = fs.lstatSync(bbugrcPath).isFile() ? JSON.parse(fs.readFileSync(bbugrcPath)): {};
         } catch(err) {
         }
 
@@ -33,6 +34,7 @@ class Configuration {
         this.dev = argv.dev;
         this.name = this.manifest.unique_name;
         this.appId = '302e48d75f4b55016aaf2c81f5ddf80f039e3f863277';
+        this.configSchema = fs.readJsonSync(path.join(process.cwd(), 'config.json'), { throws: false });
     }
 
     _validatePanelStructure(){
@@ -72,13 +74,12 @@ class Configuration {
 
     promptConfig() {
         return new Promise((resolve, reject) => {
-            const configSchema = fs.readJsonSync('./config.json', { throws: false });
-            if (configSchema) {
-                if (!configSchema.properties) {
+            if (this.configSchema) {
+                if (!this.configSchema.properties) {
                     logger.warn('[WARN] config.json has no properties');
                     resolve();
                 }
-                const questions = this._mapSchemaToQuestions(configSchema);
+                const questions = this._mapSchemaToQuestions(this.configSchema);
                 inquirer.prompt(questions).then(answers => {
                     this.appConfig = answers;
                     resolve()
@@ -91,11 +92,14 @@ class Configuration {
 
     validate(cb) {
         if (this.email && this.password && this.host) {
-            const configSchema = fs.readJsonSync('./config.json', { throws: false });
-            if (ajv.validateSchema(configSchema)) {
-                cb(null)
+            if (this.configSchema) {
+                if (ajv.validateSchema(this.configSchema)) {
+                    cb(null)
+                } else {
+                    cb('config.json is not valid json schema');
+                }
             } else {
-                cb('config.json is not valid json schema');
+                cb(null);
             }
         } else {
             cb('Missing auth');

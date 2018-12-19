@@ -42,7 +42,7 @@ const authenticate = (configuration, cb) => {
                     host: configuration.host,
                     port: configuration.port
                 }, null, 2);
-                fs.writeFile('./.bbugrc', credentials, cb);
+                fs.writeFile(configuration.bbugrcPath, credentials, cb);
             } else if (json.error) {
                 cb(json.error);
             } else {
