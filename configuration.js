@@ -6,6 +6,8 @@ const inquirer = require('inquirer');
 const Ajv = require('ajv');
 const ajv = new Ajv({verbose: true});
 
+const logger = require('./logger');
+
 class Configuration {
     constructor(rootPath, argv) {
 
@@ -35,19 +37,19 @@ class Configuration {
 
     _validatePanelStructure(){
         if (!fs.existsSync(path.resolve(this.rootPath, 'entry.js'))) {
-            console.log(chalk.red('Please define entry.js file within the panel package!'));
+            logger.fatal('Please define entry.js file within the panel package!');
             process.exit(0);
         }
 
         if (!fs.existsSync(path.resolve(this.rootPath, 'manifest.json'))) {
-            console.log(chalk.red('Please define manifest.json file within the panel package!'));
+            logger.fatal('Please define manifest.json file within the panel package!');
             process.exit(0);
         }
     }
 
     _validateManifest(){
         if(!!this.manifest.unique_name === false){
-            console.log(chalk.red('manifest.json file must define unique_name property'));
+            logger.fatal('manifest.json file must define unique_name property');
             process.exit(0);
         }
     }
@@ -73,7 +75,7 @@ class Configuration {
             const configSchema = fs.readJsonSync('./config.json', { throws: false });
             if (configSchema) {
                 if (!configSchema.properties) {
-                    console.log(chalk.yellow('[WARN] config.json has no properties'));
+                    logger.warn('[WARN] config.json has no properties');
                     resolve();
                 }
                 const questions = this._mapSchemaToQuestions(configSchema);

@@ -4,6 +4,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 
+const logger = require('./logger');
+
 bundle = (configuration, cb) => {
     const projectRootPath = configuration.rootPath;
     process.chdir(__dirname);
@@ -102,7 +104,7 @@ bundle = (configuration, cb) => {
 
     webpack(config, (err, stats) => {
         if (err) cb(err);
-        console.log('webpack', stats.toString());
+        logger.info('webpack', stats.toString());
         process.chdir(projectRootPath);
         cb();
     });

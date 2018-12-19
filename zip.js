@@ -4,18 +4,20 @@ const os = require('os');
 const archiver = require('archiver');
 const archive = archiver('zip');
 
+const logger = require('./logger');
+
 function zip(cb) {
     const output = fs.createWriteStream(path.join(os.tmpdir(), 'app.zip'));
     const dir = path.basename(process.cwd());
-    console.log(process.cwd());
+    logger.info(process.cwd());
     process.chdir('..');
     output.on('close', function () {
-        console.log(archive.pointer() + ' total bytes');
+        logger.info(archive.pointer() + ' total bytes');
         cb();
     });
     archive.on('warning', function (err) {
         if (err.code === 'ENOENT') {
-            console.warn(err.message);
+            logger.warn(err.message);
         } else {
             cb(err);
         }
