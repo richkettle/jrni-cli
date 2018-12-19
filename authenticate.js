@@ -33,6 +33,7 @@ const authenticate = (configuration, cb) => {
             const json = JSON.parse(output);
             if (statusCode >= 200 && statusCode <= 300) {
                 configuration.authToken = json.auth_token;
+                configuration.companyId = json.company_id;
                 const credentials = JSON.stringify({
                     email: configuration.email,
                     password: configuration.password,
