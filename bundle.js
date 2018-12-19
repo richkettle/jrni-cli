@@ -26,6 +26,10 @@ bundle = (configuration, cb) => {
         performance: {
             hints: false
         },
+        externals: {
+            'bookingbug-configurator-js': 'bbConfig'
+            'bookingbug-core-js': 'bbCore'
+        },       
         plugins: [
             new CleanWebpackPlugin(['build/**/*'], {
                 root: projectRootPath,

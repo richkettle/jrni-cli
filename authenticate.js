@@ -12,7 +12,7 @@ const authenticate = (configuration, cb) => {
     const options = {
         host: configuration.host,
         port: configuration.port || 443,
-        path: `/api/v1/login/admin`,
+        path: `/api/v1/login/admin/${configuration.companyId}`,
         method: 'POST',
         headers: {
             'App-Id': configuration.appId,
@@ -30,6 +30,7 @@ const authenticate = (configuration, cb) => {
             cb(error);
         })
         response.on('end', () => {
+            console.log(output)
             const json = JSON.parse(output);
             if (statusCode >= 200 && statusCode <= 300) {
                 configuration.authToken = json.auth_token;

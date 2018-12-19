@@ -62,7 +62,9 @@ const installBuilder = {
     },
     port: {
         describe: 'HTTP port to use for app install',
-        type: 'num'
+        type: 'num',
+        default: 443
+
     }
 }
 
