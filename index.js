@@ -5,6 +5,7 @@ const zip = require('./zip');
 const install = require('./install');
 const authenticate = require('./authenticate');
 const initialize = require('./initialize');
+const tail = require('./tail');
 const Configuration = require('./configuration');
 const newOptions = require('./new.json');
 const configureApp = require('./configure-app');
@@ -91,9 +92,18 @@ const newBuilder = (newYargs) => {
         .options(newOptions)
 }
 
+const tailBuilder = (tailYargs) => {
+    tailYargs
+        .positional('script', {
+            describe: 'Name of script',
+            type: 'string'
+        })
+}
+
 yargs
     .usage('Usage: $0 <command>')
     .command('$0', 'Package and install app', installBuilder, packageAndInstall)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
+    .command('tail', 'Show script logs', tailBuilder, tail)
     .argv;
 
