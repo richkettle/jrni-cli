@@ -29,7 +29,7 @@ bundle = (configuration, cb) => {
             hints: false
         },
         externals: {
-            'bookingbug-configurator-js': 'bbConfig'
+            'bookingbug-configurator-js': 'bbConfig',
             'bookingbug-core-js': 'bbCore'
         },       
         plugins: [
