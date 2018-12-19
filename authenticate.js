@@ -1,7 +1,21 @@
 const https = require('https');
 const http = require('http');
-
+const inquirer = require('inquirer');
 const fs = require('fs');
+
+const promptForCompany = (companies, configuration, cb) => {
+    const questions = [{
+        type: 'list',
+        name: 'companyId',
+        message: 'Which company should the app be installed to?',
+        paginated: true,
+        choices: companies
+    }];
+    inquirer.prompt(questions).then(answers => {
+        configuration.companyId = answers.companyId
+        authenticate(configuration, cb);
+    });
+}
 
 const authenticate = (configuration, cb) => {
     const data = JSON.stringify({
@@ -9,10 +23,11 @@ const authenticate = (configuration, cb) => {
         password: configuration.password
     });
     const protocol = configuration.port === 443 ? https : http;
+    const URL = configuration.companyId ? `/api/v1/login/admin/${configuration.companyId}` : '/api/v1/login/admin'
     const options = {
         host: configuration.host,
         port: configuration.port || 443,
-        path: `/api/v1/login/admin/${configuration.companyId}`,
+        path: URL,
         method: 'POST',
         headers: {
             'App-Id': configuration.appId,
@@ -30,7 +45,6 @@ const authenticate = (configuration, cb) => {
             cb(error);
         })
         response.on('end', () => {
-            console.log(output)
             const json = JSON.parse(output);
             if (statusCode >= 200 && statusCode <= 300) {
                 configuration.authToken = json.auth_token;
@@ -43,6 +57,14 @@ const authenticate = (configuration, cb) => {
                     port: configuration.port
                 }, null, 2);
                 fs.writeFile(configuration.bbugrcPath, credentials, cb);
+            } else if (statusCode === 400 && json._embedded) {
+                const companies = json._embedded.administrators.map((admin) => {
+                    return {
+                        name: admin.company_name,
+                        value: admin.company_id
+                    };
+                });
+                promptForCompany(companies, configuration, cb);
             } else if (json.error) {
                 cb(json.error);
             } else {
