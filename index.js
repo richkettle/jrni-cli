@@ -23,10 +23,7 @@ const packageAndInstall = (argv) => {
             return logger.fatal(err);
         }
         configuration.promptConfig().then(() => {
-            logger.info('Started authorization');
-            authenticate(configuration, function (err) {
-                if (err) return logger.fatal(err);
-                logger.info('Completed authorization');
+            authenticate(configuration).then((configuration) => {
                 logger.info('Started webpack bundle');
                 bundle(configuration, function (err) {
                     if (err) return logger.fatal(err);
@@ -49,7 +46,7 @@ const packageAndInstall = (argv) => {
                         });
                     });
                 });
-            });
+            }, logger.fatal);
         });
     });
 }

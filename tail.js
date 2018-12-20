@@ -1,49 +1,40 @@
 const https = require('https');
 const http = require('http');
 const yargs = require('yargs');
+const axios = require('axios');
 
 const Configuration = require('./configuration');
 const authenticate = require('./authenticate');
 const logger = require('./logger');
 
-const getLogs = (configuration, cb) => {
-    const protocol = configuration.port === 443 ? https : http;
+async function getLogs(configuration) {
+    const protocol = configuration.port === 443 ? 'https' : 'http';
     const start_time = 0;
     const end_time = new Date().getTime();
-    const options = {
-        host: configuration.host,
-        port: configuration.port || 443,
-        path: `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}/logs?start_time=${start_time}&end_time=${end_time}`,
-        method: 'GET',
-        headers: {
-            'App-Id': configuration.appId,
-            'Auth-Token': configuration.authToken
+    const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}/logs?start_time=${start_time}&end_time=${end_time}`;
+    try {
+        const response = await axios({
+            method: 'get',
+            url: URL,
+            baseURL: `${protocol}://${configuration.host}:${configuration.port}`,
+            headers: {
+                'App-Id': configuration.appId,
+                'Auth-Token': configuration.authToken
+            },
+            responseType: 'json'
+        });
+        const json = response.data;
+        console.log('');
+        json.forEach((logs) => {
+            console.log(logs.reduce((joined, line) => joined + line.message, ''));
+        });
+    } catch(error) {
+        if (error.response) {
+            throw error.response.error;
+        } else {
+            throw error.message;
         }
-    };
-    const request = protocol.request(options, (response) => {
-        const statusCode = response.statusCode;
-        let output = '';
-        response.on('data', (chunk) => {
-            output += chunk;
-        });
-        response.on('error', (error) => {
-            cb(error);
-        })
-        response.on('end', () => {
-            const json = JSON.parse(output);
-            if (statusCode >= 200 && statusCode <= 300) {
-                console.log('');
-                json.forEach((logs) => {
-                    console.log(logs.reduce((joined, line) => joined + line.message, ''));
-                });
-            } else if (json.error) {
-                cb(json.error);
-            } else {
-                cb(output);
-            }
-        });
-    });
-    request.end();
+    }
 }
 
 module.exports = (argv) => {
@@ -56,14 +47,10 @@ module.exports = (argv) => {
             return logger.fatal(err);
         }
         configuration.promptConfig().then(() => {
-            logger.info('Started authorization');
-            authenticate(configuration, function (err) {
-                if (err) return logger.fatal(err);
-                logger.info('Completed authorization');
-                getLogs(configuration, function (err) {
-                    if (err) return logger.fatal(err);
-                });
-            });
+            authenticate(configuration).then((configuration) => {
+                getLogs(configuration).then(() => {
+                }, logger.fatal);
+            }, logger.fatal);
         });
     });
 }

@@ -2,8 +2,13 @@ const https = require('https');
 const http = require('http');
 const inquirer = require('inquirer');
 const fs = require('fs');
+const util = require('util');
+const writeFile = util.promisify(fs.writeFile);
+const axios = require('axios');
 
-const promptForCompany = (companies, configuration, cb) => {
+const logger = require('./logger');
+
+async function promptForCompany(companies, configuration, cb) {
     const questions = [{
         type: 'list',
         name: 'companyId',
@@ -11,69 +16,62 @@ const promptForCompany = (companies, configuration, cb) => {
         paginated: true,
         choices: companies
     }];
-    inquirer.prompt(questions).then(answers => {
-        configuration.companyId = answers.companyId
-        authenticate(configuration, cb);
-    });
+    const answers = await inquirer.prompt(questions);
+    configuration.companyId = answers.companyId;
+    await authenticate(configuration);
 }
 
-const authenticate = (configuration, cb) => {
+async function authenticate(configuration) {
+    logger.info('Started authorization');
     const data = JSON.stringify({
         email: configuration.email,
         password: configuration.password
     });
-    const protocol = configuration.port === 443 ? https : http;
+    const protocol = configuration.port === 443 ? 'https' : 'http';
     const URL = configuration.companyId ? `/api/v1/login/admin/${configuration.companyId}` : '/api/v1/login/admin'
-    const options = {
-        host: configuration.host,
-        port: configuration.port || 443,
-        path: URL,
-        method: 'POST',
-        headers: {
-            'App-Id': configuration.appId,
-            'Content-Type': 'application/json',
-            'Content-Length': data.length
-        }
-    };
-    const request = protocol.request(options, (response) => {
-        const statusCode = response.statusCode;
-        let output = '';
-        response.on('data', (chunk) => {
-            output += chunk;
+    try {
+        const response = await axios({
+            method: 'post',
+            url: URL,
+            baseURL: `${protocol}://${configuration.host}:${configuration.port}`,
+            data: data,
+            headers: {
+                'App-Id': configuration.appId,
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            },
+            responseType: 'json'
         });
-        response.on('error', (error) => {
-            cb(error);
-        })
-        response.on('end', () => {
-            const json = JSON.parse(output);
-            if (statusCode >= 200 && statusCode <= 300) {
-                configuration.authToken = json.auth_token;
-                configuration.companyId = json.company_id;
-                const credentials = JSON.stringify({
-                    email: configuration.email,
-                    password: configuration.password,
-                    companyId: json.company_id,
-                    host: configuration.host,
-                    port: configuration.port
-                }, null, 2);
-                fs.writeFile(configuration.bbugrcPath, credentials, cb);
-            } else if (statusCode === 400 && json._embedded) {
+        const json = response.data;
+        configuration.authToken = json.auth_token;
+        configuration.companyId = json.company_id;
+        const credentials = JSON.stringify({
+            email: configuration.email,
+            password: configuration.password,
+            companyId: json.company_id,
+            host: configuration.host,
+            port: configuration.port
+        }, null, 2);
+        await writeFile(configuration.bbugrcPath, credentials);
+        logger.info('Completed authorization');
+        return configuration;
+    } catch(error) {
+        if (error.response) {
+            if (error.response.status == 400) {
                 const companies = json._embedded.administrators.map((admin) => {
                     return {
                         name: admin.company_name,
                         value: admin.company_id
                     };
                 });
-                promptForCompany(companies, configuration, cb);
-            } else if (json.error) {
-                cb(json.error);
+                await promptForCompany(companies, configuration);
             } else {
-                cb(output);
+                throw error.response.error;
             }
-        });
-    });
-    request.write(data);
-    request.end();
+        } else {
+            throw error.message;
+        }
+    }
 }
 
 module.exports = authenticate;
