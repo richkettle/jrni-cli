@@ -7,9 +7,12 @@ const Configuration = require('./configuration');
 const authenticate = require('./authenticate');
 const logger = require('./logger');
 
-async function getLogs(configuration) {
+let shutdown = false;
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+async function getLogs(configuration, start_time = 0) {
     const protocol = configuration.port === 443 ? 'https' : 'http';
-    const start_time = 0;
     const end_time = new Date().getTime();
     const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}/logs?start_time=${start_time}&end_time=${end_time}`;
     try {
@@ -24,10 +27,16 @@ async function getLogs(configuration) {
             responseType: 'json'
         });
         const json = response.data;
-        console.log('');
         json.forEach((logs) => {
-            console.log(logs.reduce((joined, line) => joined + line.message, ''));
+            joinedLines = logs.reduce((joined, line) => joined + line.message, '');
+            if (joinedLines != '') console.log(joinedLines);
         });
+        await delay(2000);
+        if (shutdown) {
+            process.exit(0);
+        } else {
+            await getLogs(configuration, end_time);
+        }
     } catch(error) {
         if (error.response) {
             throw error.response.error;
@@ -35,6 +44,10 @@ async function getLogs(configuration) {
             throw error.message;
         }
     }
+}
+
+function handleSignal() {
+    shutdown = true;
 }
 
 module.exports = (argv) => {
@@ -48,6 +61,10 @@ module.exports = (argv) => {
         }
         configuration.promptConfig().then(() => {
             authenticate(configuration).then((configuration) => {
+                process.on('SIGINT', handleSignal);
+                process.on('SIGTERM', handleSignal);
+                logger.info('Tailing logs');
+                console.log('');
                 getLogs(configuration).then(() => {
                 }, logger.fatal);
             }, logger.fatal);
