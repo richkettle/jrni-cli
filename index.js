@@ -10,6 +10,7 @@ const Configuration = require('./configuration');
 const newOptions = require('./new.json');
 const configureApp = require('./configure-app');
 const logger = require('./logger');
+const uninstall = require('./uninstall');
 
 const yargs = require('yargs');
 
@@ -103,5 +104,6 @@ yargs
     .command('$0', 'Package and install app', installOptions, packageAndInstall)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .command('tail', 'Show script logs', tailBuilder, tail)
+    .command('uninstall', 'Uninstall a app', installOptions, uninstall)
     .argv;
 

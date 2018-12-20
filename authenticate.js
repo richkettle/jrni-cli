@@ -12,7 +12,7 @@ async function promptForCompany(companies, configuration, cb) {
     const questions = [{
         type: 'list',
         name: 'companyId',
-        message: 'Which company should the app be installed to?',
+        message: 'Which company?',
         paginated: true,
         choices: companies
     }];
