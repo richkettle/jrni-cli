@@ -101,7 +101,7 @@ const tailBuilder = (tailYargs) => {
 
 yargs
     .usage('Usage: $0 <command>')
-    .command('$0', 'Package and install app', installOptions, packageAndInstall)
+    .command(['$0', 'install'], 'Package and install app', installOptions, packageAndInstall)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .command('tail', 'Show script logs', tailBuilder, tail)
     .command('uninstall', 'Uninstall a app', installOptions, uninstall)
