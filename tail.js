@@ -1,5 +1,6 @@
 const https = require('https');
 const http = require('http');
+const yargs = require('yargs');
 
 const Configuration = require('./configuration');
 const authenticate = require('./authenticate');

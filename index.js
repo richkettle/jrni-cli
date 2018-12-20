@@ -54,7 +54,7 @@ const packageAndInstall = (argv) => {
     });
 }
 
-const installBuilder = {
+const installOptions = {
     email: {
         describe: 'Email address used to log into BookingBug',
         type: 'string'
@@ -98,11 +98,12 @@ const tailBuilder = (tailYargs) => {
             describe: 'Name of script',
             type: 'string'
         })
+        .options(installOptions)
 }
 
 yargs
     .usage('Usage: $0 <command>')
-    .command('$0', 'Package and install app', installBuilder, packageAndInstall)
+    .command('$0', 'Package and install app', installOptions, packageAndInstall)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .command('tail', 'Show script logs', tailBuilder, tail)
     .argv;
