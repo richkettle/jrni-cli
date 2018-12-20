@@ -58,6 +58,7 @@ async function authenticate(configuration) {
     } catch(error) {
         if (error.response) {
             if (error.response.status == 400) {
+                const json = error.response.data;
                 const companies = json._embedded.administrators.map((admin) => {
                     return {
                         name: admin.company_name,
@@ -65,8 +66,10 @@ async function authenticate(configuration) {
                     };
                 });
                 await promptForCompany(companies, configuration);
-            } else {
+            } else if (error.response.error) {
                 throw error.response.error;
+            } else {
+                throw error;
             }
         } else {
             throw error.message;

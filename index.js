@@ -14,42 +14,42 @@ const uninstall = require('./uninstall');
 
 const yargs = require('yargs');
 
-const packageAndInstall = (argv) => {
-    const projectRootPath = process.cwd();
-    const configuration = new Configuration(projectRootPath, argv);
-    configuration.validate(function (err) {
-        if (err === 'Missing auth') {
-            return yargs.showHelp();
-        } else if (err) {
-            return logger.fatal(err);
-        }
-        configuration.promptConfig().then(() => {
-            authenticate(configuration).then((configuration) => {
-                logger.info('Started webpack bundle');
-                bundle(configuration, function (err) {
+const packageAndInstall = async function(argv) {
+    try {
+        const projectRootPath = process.cwd();
+        let configuration = new Configuration(projectRootPath, argv);
+        await configuration.validate();
+        await configuration.promptConfig();
+        await authenticate(configuration);
+        logger.info('Started webpack bundle');
+        bundle(configuration, function (err) {
+            if (err) return logger.fatal(err);
+            logger.info('Completed webpack bundle');
+            logger.info('Started zip');
+            zip(function (err) {
+                if (err) return logger.fatal(err);
+                logger.info('Completed zip');
+                logger.info('Started install');
+                install(configuration, function (err) {
                     if (err) return logger.fatal(err);
-                    logger.info('Completed webpack bundle');
-                    logger.info('Started zip');
-                    zip(function (err) {
-                        if (err) return logger.fatal(err);
-                        logger.info('Completed zip');
-                        logger.info('Started install');
-                        install(configuration, function (err) {
+                    logger.info('Completed install');
+                    if (configuration.appConfig) {
+                        logger.info('Started config');
+                        configureApp(configuration, function (err) {
                             if (err) return logger.fatal(err);
-                            logger.info('Completed install');
-                            if (configuration.appConfig) {
-                                logger.info('Started config');
-                                configureApp(configuration, function (err) {
-                                    if (err) return logger.fatal(err);
-                                    logger.info('Completed config');
-                                });
-                            }
+                            logger.info('Completed config');
                         });
-                    });
+                    }
                 });
-            }, logger.fatal);
+            });
         });
-    });
+    } catch(error) {
+        if (error === 'Missing auth') {
+            yargs.showHelp()
+        } else {
+            logger.fatal(error.stack ? error.stack : error);
+        }
+    }
 }
 
 const installOptions = {

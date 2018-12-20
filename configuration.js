@@ -5,6 +5,7 @@ const path = require('path');
 const inquirer = require('inquirer');
 const Ajv = require('ajv');
 const ajv = new Ajv({verbose: true});
+const yargs = require('yargs');
 
 const logger = require('./logger');
 
@@ -90,20 +91,22 @@ class Configuration {
         })
     }
 
-    validate(cb) {
-        if (this.email && this.password && this.host) {
-            if (this.configSchema) {
-                if (ajv.validateSchema(this.configSchema)) {
-                    cb(null)
+    validate() {
+        return new Promise((resolve, reject) => {
+            if (this.email && this.password && this.host) {
+                if (this.configSchema) {
+                    if (ajv.validateSchema(this.configSchema)) {
+                        resolve();
+                    } else {
+                        reject('config.json is not valid json schema');
+                    }
                 } else {
-                    cb('config.json is not valid json schema');
+                    resolve();
                 }
             } else {
-                cb(null);
+                reject('Missing auth');
             }
-        } else {
-            cb('Missing auth');
-        }
+        });
     }
 }
 

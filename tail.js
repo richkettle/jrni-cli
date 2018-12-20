@@ -50,25 +50,20 @@ function handleSignal() {
     shutdown = true;
 }
 
-module.exports = (argv) => {
-    const projectRootPath = process.cwd();
-    const configuration = new Configuration(projectRootPath, argv);
-    configuration.validate(function (err) {
-        if (err === 'Missing auth') {
-            return yargs.showHelp();
-        } else if (err) {
-            return logger.fatal(err);
-        }
-        configuration.promptConfig().then(() => {
-            authenticate(configuration).then((configuration) => {
-                process.on('SIGINT', handleSignal);
-                process.on('SIGTERM', handleSignal);
-                logger.info('Tailing logs');
-                console.log('');
-                getLogs(configuration).then(() => {
-                }, logger.fatal);
-            }, logger.fatal);
-        });
-    });
+module.exports = async function(argv) {
+    try {
+        const projectRootPath = process.cwd();
+        const configuration = new Configuration(projectRootPath, argv);
+        await configuration.validate();
+        await configuration.promptConfig();
+        await authenticate(configuration);
+        process.on('SIGINT', handleSignal);
+        process.on('SIGTERM', handleSignal);
+        logger.info('Tailing logs');
+        console.log('');
+        getLogs(configuration);
+    } catch(error) {
+        logger.fatal(error);
+    }
 }
 
