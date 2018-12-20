@@ -49,26 +49,26 @@ bundle = (configuration, cb) => {
                     test: /^(?!.*\.spec\.js$).*\.js$/,
                     use: [
                         {
-                            loader: 'ng-annotate-loader'
+                            loader: path.resolve(__dirname, 'node_modules', 'ng-annotate-loader')
                         },
                         {
-                            loader: 'babel-loader',
+                            loader: path.resolve(__dirname, 'node_modules', 'babel-loader'),
                             options: {
                                 presets: [
-                                    [path.join(process.cwd(), 'node_modules/babel-preset-env'), {
+                                    [path.resolve(__dirname, 'node_modules', 'babel-preset-env'), {
                                         loose: true
                                     }]
                                 ],
                                 plugins: [
-                                    path.join(process.cwd(), 'node_modules/babel-plugin-transform-object-rest-spread'),
-                                    path.join(process.cwd(), 'node_modules/babel-plugin-transform-decorators-legacy'),
-                                    path.join(process.cwd(), 'node_modules/babel-plugin-transform-async-to-generator'),
-                                    path.join(process.cwd(), 'node_modules/babel-plugin-transform-optional-catch-binding')
+                                    path.resolve(__dirname, 'node_modules', 'babel-plugin-transform-object-rest-spread'),
+                                    path.resolve(__dirname, 'node_modules', 'babel-plugin-transform-decorators-legacy'),
+                                    path.resolve(__dirname, 'node_modules', 'babel-plugin-transform-async-to-generator'),
+                                    path.resolve(__dirname, 'node_modules', 'babel-plugin-transform-optional-catch-binding')
                                 ]
                             }
                         },
                         {
-                            loader: 'import-glob-loader'
+                            loader: path.resolve(__dirname, 'node_modules', 'import-glob-loader')
                         }
                     ]
                 },
@@ -78,28 +78,28 @@ bundle = (configuration, cb) => {
                 },
                 {
                     test: /.*\.html$/,
-                    use: `ng-cache-loader?prefix=${configuration.manifest.unique_name}&exportId`
+                    use: path.resolve(__dirname, 'node_modules', `ng-cache-loader?prefix=${configuration.manifest.unique_name}&exportId`)
                 },
                 {
                     test: /\.(jpe?g|png|gif|ico)$/i,
-                    use: 'url-loader?name=images/[name].[ext]'
+                    use: path.resolve(__dirname, 'node_modules', 'url-loader?name=images/[name].[ext]')
                 },
                 {
                     test: /.*fontawesome.*\.svg$/,
-                    use: 'url-loader?name=fonts/[name].[ext]'
+                    use: path.resolve(__dirname, 'node_modules', 'url-loader?name=fonts/[name].[ext]')
                 },
                 {
                     test: /\.font\.(?=svg$)/,
-                    use: 'url-loader?name=fonts/[name].[ext]'
+                    use: path.resolve(__dirname, 'node_modules', 'url-loader?name=fonts/[name].[ext]')
                 },
                 {
                     test: /\.svg$/,
                     exclude: /\.font\.(?=svg$)/,
-                    use: 'url-loader?name=images/[name].[ext]'
+                    use: path.resolve(__dirname, 'node_modules', 'url-loader?name=images/[name].[ext]')
                 },
                 {
                     test: /\.(woff2?|ttf|otf|eot)$/,
-                    use: 'url-loader?name=fonts/[name].[ext]'
+                    use: path.resolve(__dirname, 'node_modules', 'url-loader?name=fonts/[name].[ext]')
                 }
             ]
         }
