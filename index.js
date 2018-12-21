@@ -13,6 +13,8 @@ const logger = require('./logger');
 const uninstall = require('./uninstall');
 
 const yargs = require('yargs');
+const fs = require('fs-extra');
+const path = require('path');
 
 const packageAndInstall = async function(argv) {
     try {
@@ -99,11 +101,14 @@ const tailBuilder = (tailYargs) => {
         .options(installOptions)
 }
 
+const config = fs.readJsonSync(path.join(process.cwd(), '.bbugrc')) || {};
+
 yargs
     .usage('Usage: $0 <command>')
     .command(['$0', 'install'], 'Package and install app', installOptions, packageAndInstall)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .command('tail', 'Show script logs', tailBuilder, tail)
     .command('uninstall', 'Uninstall a app', installOptions, uninstall)
+    .config(config)
     .argv;
 

@@ -21,17 +21,12 @@ class Configuration {
         this._validateManifest();
 
         this.bbugrcPath = path.join(process.cwd(), '.bbugrc');
-        let config = {};
-        try {
-            config = fs.lstatSync(bbugrcPath).isFile() ? JSON.parse(fs.readFileSync(bbugrcPath)): {};
-        } catch(err) {
-        }
 
-        this.email = config.email || argv.email;
-        this.password = config.password || argv.password;
-        this.host = config.host || argv.host;
-        this.companyId = argv.companyId ? argv.companyId.toString() : config.companyId;
-        this.port = config.port || argv.port;
+        this.email = argv.email;
+        this.password = argv.password;
+        this.host = argv.host;
+        this.companyId = argv.companyId && argv.companyId.toString();
+        this.port = argv.port;
         this.dev = argv.dev;
         this.name = this.manifest.unique_name;
         this.appId = '302e48d75f4b55016aaf2c81f5ddf80f039e3f863277';
