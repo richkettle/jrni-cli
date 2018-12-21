@@ -80,6 +80,7 @@ class Configuration {
                         logger.warn('config.json has no properties');
                         resolve();
                     }
+                    console.log("\nApp config\n");
                     const questions = this._mapSchemaToQuestions(this.configSchema);
                     inquirer.prompt(questions).then(answers => {
                         this.appConfig = answers;
