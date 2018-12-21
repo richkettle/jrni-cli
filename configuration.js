@@ -93,6 +93,35 @@ class Configuration {
         }
     }
 
+    promptAuth() {
+        return new Promise((resolve, reject) => {
+            console.log("\nBookingBug login\n");
+            let questions = [{
+                type: 'input',
+                name: 'email',
+                message: 'Email address used to log into BookingBug'
+            }, {
+                type: 'input',
+                name: 'password',
+                message: 'Password used to log into BookingBug'
+            }, {
+                type: 'input',
+                name: 'host',
+                message: 'Destination host server for app install'
+            }];
+            questions = questions.filter((question) => {
+                return !this[question.name];
+            });
+            inquirer.prompt(questions).then(answers => {
+                questions.forEach((question) => {
+                    this[question.name] = answers[question.name];
+                });
+                resolve();
+            }, reject);
+        });
+
+    }
+
     validate() {
         return new Promise((resolve, reject) => {
             if (this.email && this.password && this.host) {
@@ -106,7 +135,7 @@ class Configuration {
                     resolve();
                 }
             } else {
-                reject('Missing auth');
+                this.promptAuth().then(resolve, reject);
             }
         });
     }

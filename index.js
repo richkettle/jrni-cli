@@ -46,11 +46,7 @@ const packageAndInstall = async function(argv) {
             });
         });
     } catch(error) {
-        if (error === 'Missing auth') {
-            yargs.showHelp()
-        } else {
-            logger.fatal(error.stack ? error.stack : error);
-        }
+        logger.fatal(error.stack ? error.stack : error);
     }
 }
 
