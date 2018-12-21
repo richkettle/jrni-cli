@@ -69,21 +69,27 @@ class Configuration {
     }
 
     promptConfig() {
-        return new Promise((resolve, reject) => {
-            if (this.configSchema) {
-                if (!this.configSchema.properties) {
-                    logger.warn('[WARN] config.json has no properties');
+        const config = fs.readJsonSync(path.join(process.cwd(), '.bbugrc'), {throws: false});
+        if (config) this.appConfig = config.appConfig;
+        if (this.appConfig) {
+            return Promise.resolve();
+        } else {
+            return new Promise((resolve, reject) => {
+                if (this.configSchema) {
+                    if (!this.configSchema.properties) {
+                        logger.warn('config.json has no properties');
+                        resolve();
+                    }
+                    const questions = this._mapSchemaToQuestions(this.configSchema);
+                    inquirer.prompt(questions).then(answers => {
+                        this.appConfig = answers;
+                        resolve()
+                    }, reject);
+                } else {
                     resolve();
                 }
-                const questions = this._mapSchemaToQuestions(this.configSchema);
-                inquirer.prompt(questions).then(answers => {
-                    this.appConfig = answers;
-                    resolve()
-                }, reject);
-            } else {
-                resolve();
-            }
-        })
+            })
+        }
     }
 
     validate() {
@@ -102,6 +108,17 @@ class Configuration {
                 reject('Missing auth');
             }
         });
+    }
+
+    writeToFile() {
+        return fs.outputJson(this.bbugrcPath, {
+            email: this.email,
+            password: this.password,
+            companyId: this.company_id,
+            host: this.host,
+            port: this.port,
+            appConfig: this.appConfig
+        }, {spaces: 2});
     }
 }
 

@@ -1,8 +1,11 @@
 const https = require('https');
 const http = require('http');
 
+const logger = require('./logger');
+
 module.exports = (configuration, cb) => {
     const data = JSON.stringify(configuration.appConfig);
+    logger.info(`Config: '${data}'`);
     const protocol = configuration.port === 443 ? https : http;
     const options = {
         host: configuration.host,

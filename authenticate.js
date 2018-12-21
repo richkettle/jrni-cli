@@ -45,14 +45,7 @@ async function authenticate(configuration) {
         const json = response.data;
         configuration.authToken = json.auth_token;
         configuration.companyId = json.company_id;
-        const credentials = JSON.stringify({
-            email: configuration.email,
-            password: configuration.password,
-            companyId: json.company_id,
-            host: configuration.host,
-            port: configuration.port
-        }, null, 2);
-        await writeFile(configuration.bbugrcPath, credentials);
+        await configuration.writeToFile();
         logger.info('Completed authorization');
         return configuration;
     } catch(error) {

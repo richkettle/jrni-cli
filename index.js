@@ -101,7 +101,7 @@ const tailBuilder = (tailYargs) => {
         .options(installOptions)
 }
 
-const config = fs.readJsonSync(path.join(process.cwd(), '.bbugrc')) || {};
+const config = fs.readJsonSync(path.join(process.cwd(), '.bbugrc'), {throws: false}) || {};
 
 yargs
     .usage('Usage: $0 <command>')
