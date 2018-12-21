@@ -39,7 +39,7 @@ async function getLogs(configuration, start_time = 0) {
         }
     } catch(error) {
         if (error.response) {
-            throw error.response.error;
+            throw error.response.data;
         } else {
             throw error.message;
         }
@@ -61,7 +61,7 @@ module.exports = async function(argv) {
         process.on('SIGTERM', handleSignal);
         logger.info('Tailing logs');
         console.log('');
-        getLogs(configuration);
+        await getLogs(configuration);
     } catch(error) {
         logger.fatal(error);
     }
