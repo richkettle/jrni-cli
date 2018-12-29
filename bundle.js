@@ -16,6 +16,9 @@ bundle = (configuration, cb) => {
                 path.resolve(projectRootPath, 'entry.js')
             ]
         },
+        optimization:{
+            minimize: false
+        },
         target: 'web',
         mode: configuration.isDev() ? 'development' : 'production',
         output: {
