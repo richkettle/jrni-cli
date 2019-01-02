@@ -25,29 +25,16 @@ const packageAndInstall = async function(argv) {
         await configuration.promptConfig();
         await authenticate(configuration);
         await createEntry(configuration);
-        logger.info('Started webpack bundle');
-        bundle(configuration, function (err) {
-            if (err) return logger.fatal(err);
-            logger.info('Completed webpack bundle');
-            logger.info('Started zip');
-            zip(function (err) {
-                if (err) return logger.fatal(err);
-                logger.info('Completed zip');
-                logger.info('Started install');
-                install(configuration, function (err) {
-                    if (err) return logger.fatal(err);
-                    logger.info('Completed install');
-                    if (configuration.appConfig) {
-                        logger.info('Started config');
-                        configureApp(configuration, function (err) {
-                            if (err) return logger.fatal(err);
-                            logger.info('Completed config');
-                        });
-                    }
-                });
-            });
-        });
+        await bundle(configuration);
+        await zip();
+        await install(configuration);
+        if (configuration.appConfig) {
+            await configureApp(configuration);
+        }
     } catch(error) {
+        if (error.response && error.response.data) {
+            logger.fatal(error.response.data.error || error.response.data);
+        }
         logger.fatal(error.stack ? error.stack : error);
     }
 }

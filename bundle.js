@@ -6,7 +6,8 @@ const path = require('path');
 
 const logger = require('./logger');
 
-bundle = (configuration, cb) => {
+async function bundle(configuration) {
+    logger.info('Started webpack bundle');
     const projectRootPath = configuration.rootPath;
 
     const config = {
@@ -106,10 +107,13 @@ bundle = (configuration, cb) => {
     if (configuration.manifest.panels) config.entry.panel = [path.resolve(projectRootPath, 'entry.js')];
     if (configuration.manifest.jext) config.entry.jext = [path.resolve(projectRootPath, 'entry-jext.js')];
 
-    webpack(config, (err, stats) => {
-        if (err) cb(err);
-        logger.info(`webpack ${stats.toString()}`);
-        cb();
+    return new Promise((resolve, reject) => {
+        webpack(config, (err, stats) => {
+            if (err) reject(err);
+            logger.info(`webpack ${stats.toString()}`);
+            logger.info('Completed webpack bundle');
+            resolve();
+        });
     });
 }
 
