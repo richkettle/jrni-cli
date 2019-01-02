@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-const bundle = require('./bundle');
-const zip = require('./zip');
 const install = require('./install');
 const initialize = require('./initialize');
 const tail = require('./tail');
