@@ -11,11 +11,7 @@ bundle = (configuration, cb) => {
 
     const config = {
         context: process.cwd(),
-        entry: {
-            panel: [
-                path.resolve(projectRootPath, 'entry.js')
-            ]
-        },
+        entry: {},
         optimization:{
             minimize: false
         },
@@ -107,6 +103,8 @@ bundle = (configuration, cb) => {
             ]
         }
     };
+    if (configuration.manifest.panels) config.entry.panel = [path.resolve(projectRootPath, 'entry.js')];
+    if (configuration.manifest.jext) config.entry.jext = [path.resolve(projectRootPath, 'entry-jext.js')];
 
     webpack(config, (err, stats) => {
         if (err) cb(err);

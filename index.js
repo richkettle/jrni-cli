@@ -11,6 +11,7 @@ const newOptions = require('./new.json');
 const configureApp = require('./configure-app');
 const logger = require('./logger');
 const uninstall = require('./uninstall');
+const createEntry = require('./create-entry');
 
 const yargs = require('yargs');
 const fs = require('fs-extra');
@@ -23,6 +24,7 @@ const packageAndInstall = async function(argv) {
         await configuration.validate();
         await configuration.promptConfig();
         await authenticate(configuration);
+        await createEntry(configuration);
         logger.info('Started webpack bundle');
         bundle(configuration, function (err) {
             if (err) return logger.fatal(err);

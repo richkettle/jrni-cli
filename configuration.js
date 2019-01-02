@@ -14,7 +14,7 @@ class Configuration {
 
         this.rootPath = rootPath;
 
-        this._validatePanelStructure();
+        this._validateAppStructure();
 
         this.manifest = require(path.resolve(this.rootPath, 'manifest.json'));
 
@@ -33,14 +33,9 @@ class Configuration {
         this.configSchema = fs.readJsonSync(path.join(process.cwd(), 'config.json'), { throws: false });
     }
 
-    _validatePanelStructure(){
-        if (!fs.existsSync(path.resolve(this.rootPath, 'entry.js'))) {
-            logger.fatal('Please define entry.js file within the panel package!');
-            process.exit(0);
-        }
-
+    _validateAppStructure(){
         if (!fs.existsSync(path.resolve(this.rootPath, 'manifest.json'))) {
-            logger.fatal('Please define manifest.json file within the panel package!');
+            logger.fatal('Please define manifest.json file within the app package!');
             process.exit(0);
         }
     }
