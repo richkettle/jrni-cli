@@ -31,21 +31,19 @@ async function uninstallRequest(configuration) {
     }
 }
 
-module.exports = (argv) => {
-    const projectRootPath = process.cwd();
-    const configuration = new Configuration(projectRootPath, argv);
-    configuration.validate(function (err) {
-        if (err === 'Missing auth') {
-            return yargs.showHelp();
-        } else if (err) {
-            return logger.fatal(err);
+async function command(argv) {
+    try {
+        const projectRootPath = process.cwd();
+        const configuration = new Configuration(projectRootPath, argv);
+        await authenticate(configuration);
+        await uninstallRequest(configuration);
+    } catch(error) {
+        if (error.response && error.response.data) {
+            logger.fatal(error.response.data.error || error.response.data);
         }
-        configuration.promptConfig().then(() => {
-            authenticate(configuration).then((configuration) => {
-                uninstallRequest(configuration).then(() => {
-                }, logger.fatal);
-            }, logger.fatal);
-        });
-    });
+        logger.fatal(error.stack ? error.stack : error);
+    }
 }
+
+module.exports = command;
 
