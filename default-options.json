@@ -1,0 +1,28 @@
+{
+   "email": {
+        "describe": "Email address used to log into BookingBug",
+        "type": "string"
+    },
+    "password": {
+        "describe": "Password used to log into BookingBug",
+        "type": "string"
+    },
+    "dev": {
+        "describe": "Do not apply production optimisations",
+        "type": "boolean"
+    },
+    "host": {
+        "describe": "Destination host server for app install",
+        "type": "string"
+    },
+    "companyId": {
+        "describe": "Destination company for app install",
+        "type": "num"
+    },
+    "port": {
+        "describe": "HTTP port to use for app install",
+        "type": "num",
+        "default": 443
+
+    }
+}

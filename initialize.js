@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const inquirer = require('inquirer');
 
-const newOptions = require('./new.json');
+const newOptions = require('./new-options.json');
 const logger = require('./logger');
 
 const questions = Object.entries(newOptions).reduce((list, pair) => {
