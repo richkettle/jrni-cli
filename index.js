@@ -3,41 +3,15 @@
 const bundle = require('./bundle');
 const zip = require('./zip');
 const install = require('./install');
-const authenticate = require('./authenticate');
 const initialize = require('./initialize');
 const tail = require('./tail');
-const Configuration = require('./configuration');
 const newOptions = require('./new.json');
-const configureApp = require('./configure-app');
 const logger = require('./logger');
 const uninstall = require('./uninstall');
-const createEntry = require('./create-entry');
 
 const yargs = require('yargs');
 const fs = require('fs-extra');
 const path = require('path');
-
-const packageAndInstall = async function(argv) {
-    try {
-        const projectRootPath = process.cwd();
-        let configuration = new Configuration(projectRootPath, argv);
-        await configuration.validate();
-        await configuration.promptConfig();
-        await authenticate(configuration);
-        await createEntry(configuration);
-        await bundle(configuration);
-        await zip();
-        await install(configuration);
-        if (configuration.appConfig) {
-            await configureApp(configuration);
-        }
-    } catch(error) {
-        if (error.response && error.response.data) {
-            logger.fatal(error.response.data.error || error.response.data);
-        }
-        logger.fatal(error.stack ? error.stack : error);
-    }
-}
 
 const installOptions = {
     email: {
@@ -90,7 +64,7 @@ const config = fs.readJsonSync(path.join(process.cwd(), '.bbugrc'), {throws: fal
 
 yargs
     .usage('Usage: $0 <command>')
-    .command(['$0', 'install'], 'Package and install app', installOptions, packageAndInstall)
+    .command(['$0', 'install'], 'Package and install app', installOptions, install)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .command('tail', 'Show script logs', tailBuilder, tail)
     .command('uninstall', 'Uninstall a app', installOptions, uninstall)

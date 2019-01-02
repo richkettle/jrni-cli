@@ -3,9 +3,15 @@ const os = require('os');
 const fs = require('fs');
 const FormData = require('form-data');
 
+const Configuration = require('./configuration');
+const bundle = require('./bundle');
+const zip = require('./zip');
+const authenticate = require('./authenticate');
+const configureApp = require('./configure-app');
+const createEntry = require('./create-entry');
 const logger = require('./logger');
 
-async function install(configuration) {
+async function submitForm(configuration) {
     return new Promise((resolve, reject) => {
         logger.info('Started install');
         const filePath = path.join(os.tmpdir(), 'app.zip');
@@ -42,4 +48,26 @@ async function install(configuration) {
     });
 }
 
-module.exports = install;
+async function packageAndInstall(argv) {
+    try {
+        const projectRootPath = process.cwd();
+        let configuration = new Configuration(projectRootPath, argv);
+        await configuration.validate();
+        await configuration.promptConfig();
+        await authenticate(configuration);
+        await createEntry(configuration);
+        await bundle(configuration);
+        await zip();
+        await submitForm(configuration);
+        if (configuration.appConfig) {
+            await configureApp(configuration);
+        }
+    } catch(error) {
+        if (error.response && error.response.data) {
+            logger.fatal(error.response.data.error || error.response.data);
+        }
+        logger.fatal(error.stack ? error.stack : error);
+    }
+}
+
+module.exports = packageAndInstall;
