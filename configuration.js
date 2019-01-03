@@ -74,13 +74,14 @@ class Configuration {
                     if (!this.configSchema.properties) {
                         logger.warn('config.json has no properties');
                         resolve();
+                    } else {
+                        console.log("\nApp config\n");
+                        const questions = this._mapSchemaToQuestions(this.configSchema);
+                        inquirer.prompt(questions).then(answers => {
+                            this.appConfig = answers;
+                            resolve()
+                        }, reject);
                     }
-                    console.log("\nApp config\n");
-                    const questions = this._mapSchemaToQuestions(this.configSchema);
-                    inquirer.prompt(questions).then(answers => {
-                        this.appConfig = answers;
-                        resolve()
-                    }, reject);
                 } else {
                     resolve();
                 }
