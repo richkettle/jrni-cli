@@ -110,9 +110,19 @@ async function bundle(configuration) {
     return new Promise((resolve, reject) => {
         webpack(config, (err, stats) => {
             if (err) reject(err);
-            logger.info(`webpack ${stats.toString()}`);
-            logger.info('Completed webpack bundle');
-            resolve();
+            if (stats.compilation.errors && stats.compilation.errors.length > 0) {
+                for (i = 0; i < stats.compilation.errors.length; i++) {
+                    logger.fatal(stats.compilation.errors[i]);
+                }
+                reject('Webpack error');
+            } else if (stats.hasErrors()) {
+                reject(stats.toJson().errors);
+            } else {
+                if (stats.hasWarnings()) logger.warn(stats.toJson().warnings);
+                stats.toString().split("\n").forEach(logger.info);
+                logger.info('Completed webpack bundle');
+                resolve();
+            }
         });
     });
 }
