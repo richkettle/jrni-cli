@@ -28,6 +28,7 @@ async function zip() {
         archive.pipe(output);
         archive.glob('./manifest.json');
         archive.glob('./**/!(bbug-apps-cli*|manifest.json)');
+        archive.glob('./*/manifest.json');
         archive.finalize();
     });
 }
