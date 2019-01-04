@@ -41,8 +41,11 @@ class Configuration {
     }
 
     _validateManifest(){
-        if(!!this.manifest.unique_name === false){
-            logger.fatal('manifest.json file must define unique_name property');
+        const schema = fs.readJsonSync(path.join(__dirname, 'schema', 'manifest.schema.json'));
+        const valid = ajv.validate(schema, this.manifest);
+        if (!valid) {
+            logger.fatal('manifest.json validation error');
+            logger.fatal(ajv.errorsText());
             process.exit(0);
         }
     }
