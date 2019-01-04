@@ -1,0 +1,49 @@
+{
+  "allOf": [
+    {
+      "$ref": "http://json-schema.org/draft-07/schema#"
+    }
+  ],
+  "definitions": {
+    "objectField": {
+      "type": "object",
+      "required": [
+        "key",
+        "type"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "object field key",
+          "example": "myfield"
+        },
+        "type": {
+          "$ref": "http://json-schema.org/draft-07/schema#/definitions/simpleTypes"
+        },
+        "length": {
+          "type": "integer",
+          "description": "The max length of a string field",
+          "example": "30"
+        },
+        "default": {
+          "description": "The default value of the field",
+          "example": "value"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "If the feild is required when being created",
+          "example": true
+        },
+        "drops": {
+          "type": "boolean",
+          "description": "If this field is available in liquid drops",
+          "example": true
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/definitions/objectField"
+  }
+}

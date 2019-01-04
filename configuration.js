@@ -19,6 +19,7 @@ class Configuration {
         this.manifest = require(path.resolve(this.rootPath, 'manifest.json'));
 
         this._validateManifest();
+        this._validateCustomObjects();
 
         this.bbugrcPath = path.join(process.cwd(), '.bbugrc');
 
@@ -47,6 +48,21 @@ class Configuration {
             logger.fatal('manifest.json validation error');
             logger.fatal(ajv.errorsText());
             process.exit(0);
+        }
+    }
+
+    _validateCustomObjects() {
+        const schema = fs.readJsonSync(path.join(__dirname, 'schema', 'custom-object-fields.schema.json'));
+        if (this.manifest.objects) {
+            this.manifest.objects.forEach((object) => {
+                const fields = fs.readJsonSync(path.join(process.cwd(), object, 'fields.json'));
+                const valid = ajv.validate(schema, fields);
+                if (!valid) {
+                    logger.fatal(`${object}/fields.json validation error`);
+                    logger.fatal(ajv.errorsText());
+                    process.exit(0);
+                }
+            });
         }
     }
 
