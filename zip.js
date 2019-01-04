@@ -10,9 +10,6 @@ async function zip() {
     return new Promise((resolve, reject) => {
         logger.info('Started zip');
         const output = fs.createWriteStream(path.join(os.tmpdir(), 'app.zip'));
-        const dir = path.basename(process.cwd());
-        logger.info(process.cwd());
-        process.chdir('..');
         output.on('close', function () {
             logger.info(archive.pointer() + ' total bytes');
             logger.info('Completed zip');
@@ -29,7 +26,8 @@ async function zip() {
             reject(err);
         });
         archive.pipe(output);
-        archive.glob(`${dir}/**`);
+        archive.glob('./manifest.json');
+        archive.glob('./**/!(bbug-apps-cli*|manifest.json)');
         archive.finalize();
     });
 }
