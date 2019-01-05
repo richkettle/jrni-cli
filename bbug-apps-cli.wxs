@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="94453D13-17F1-4AD9-AA84-46F1977DA1EC" Name="BookingBug Apps CLI" Language="1033" Version="0.0.0.1" Manufacturer="BookingBug" UpgradeCode="27EA79C1-0DE9-408A-8359-AD0CBE1B4612">
+        <Package Description="Test file in a Product" Comments="Simple test" InstallerVersion="200" Compressed="yes" />
+        <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder" Name="PFiles">
+                <Directory Id="BOOKINGBUG_APPS_CLI" Name="BookingBug Apps CLI">
+                    <Component Id="BBUG_APPS_CLI.EXE" DiskId="1" Guid="A6181B98-5B58-4092-80C4-5D7B7A67AC71">
+                        <File Id="BBUG_APPS_CLI.EXE" Name="bbug-apps-cli.exe" Source="bbug-apps-cli-win.exe" />
+                        <Environment Id="PATH" Name="PATH" Action="set" Part="last" Permanent="no" System="no" Value="C:\Program Files (x86)\BookingBug Apps CLI" />
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature Id="DefaultFeature" Title="Main Feature" Level="1">
+            <ComponentRef Id="BBUG_APPS_CLI.EXE" />
+        </Feature>
+        <UI />
+        <UIRef Id="WixUI_Minimal" />
+    </Product>
+</Wix>
