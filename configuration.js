@@ -42,7 +42,7 @@ class Configuration {
     }
 
     _validateManifest(){
-        const schema = fs.readJsonSync(path.join(__dirname, 'schema', 'manifest.schema.json'));
+        const schema = fs.readJsonSync(path.join(__dirname, './schema/manifest.schema.json'));
         const valid = ajv.validate(schema, this.manifest);
         if (!valid) {
             logger.fatal('manifest.json validation error');
@@ -52,7 +52,7 @@ class Configuration {
     }
 
     _validateCustomObjects() {
-        const schema = fs.readJsonSync(path.join(__dirname, 'schema', 'custom-object-fields.schema.json'));
+        const schema = fs.readJsonSync(path.join(__dirname, './schema/custom-object-fields.schema.json'));
         if (this.manifest.objects) {
             this.manifest.objects.forEach((object) => {
                 const fields = fs.readJsonSync(path.join(process.cwd(), object, 'fields.json'));
