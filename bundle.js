@@ -7,7 +7,6 @@ const path = require('path');
 const logger = require('./logger');
 
 async function bundle(configuration) {
-    logger.info('Started webpack bundle');
     const projectRootPath = configuration.rootPath;
 
     const config = {
@@ -104,26 +103,36 @@ async function bundle(configuration) {
             ]
         }
     };
-    if (configuration.manifest.panels) config.entry.panel = [path.resolve(projectRootPath, 'entry.js')];
-    if (configuration.manifest.jext) config.entry.jext = [path.resolve(projectRootPath, 'entry-jext.js')];
+    if (configuration.manifest.panels && configuration.manifest.panels.length > 0) {
+        config.entry.panel = [path.resolve(projectRootPath, 'entry.js')];
+    }
+    if (configuration.manifest.jext && configuration.manifest.jext.length > 0) {
+        config.entry.jext = [path.resolve(projectRootPath, 'entry-jext.js')];
+    }
 
     return new Promise((resolve, reject) => {
-        webpack(config, (err, stats) => {
-            if (err) reject(err);
-            if (stats.compilation.errors && stats.compilation.errors.length > 0) {
-                for (i = 0; i < stats.compilation.errors.length; i++) {
-                    logger.fatal(stats.compilation.errors[i]);
+        if (Object.keys(config.entry).length == 0) {
+            logger.info('Skipping webpack bundle');
+            resolve();
+        } else {
+            logger.info('Started webpack bundle');
+            webpack(config, (err, stats) => {
+                if (err) reject(err);
+                if (stats.compilation.errors && stats.compilation.errors.length > 0) {
+                    for (i = 0; i < stats.compilation.errors.length; i++) {
+                        logger.fatal(stats.compilation.errors[i]);
+                    }
+                    reject('Webpack error');
+                } else if (stats.hasErrors()) {
+                    reject(stats.toJson().errors);
+                } else {
+                    if (stats.hasWarnings()) logger.warn(stats.toJson().warnings);
+                    stats.toString().split("\n").forEach(logger.info);
+                    logger.info('Completed webpack bundle');
+                    resolve();
                 }
-                reject('Webpack error');
-            } else if (stats.hasErrors()) {
-                reject(stats.toJson().errors);
-            } else {
-                if (stats.hasWarnings()) logger.warn(stats.toJson().warnings);
-                stats.toString().split("\n").forEach(logger.info);
-                logger.info('Completed webpack bundle');
-                resolve();
-            }
-        });
+            });
+        }
     });
 }
 

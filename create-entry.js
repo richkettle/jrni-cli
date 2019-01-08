@@ -5,7 +5,7 @@ async function createPanelsEntry(configuration) {
         lines.push(`import './${folder}/**/!(*.spec).js'`);
         return lines;
     }, []).join("\n");
-    await fs.writeFile('entry.js', content);
+    if (content) await fs.writeFile('entry.js', content);
 }
 
 async function createJextEntry(configuration) {
@@ -13,7 +13,7 @@ async function createJextEntry(configuration) {
         lines.push(`import './${folder}/**/!(*.spec).js'`);
         return lines;
     }, []).join("\n");
-    await fs.writeFile('entry-jext.js', content);
+    if (content) await fs.writeFile('entry-jext.js', content);
 }
 
 async function createEntry(configuration) {
