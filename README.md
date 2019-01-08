@@ -33,9 +33,6 @@ Options:
     <td>--password</td><td>Password used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>--dev</td><td>Do not apply production optimisations</td>
-  </tr>
-  <tr>
     <td>--host</td><td>Destination host server</td>
   </tr>
   <tr>
@@ -61,9 +58,6 @@ Options:
     <td>--password</td><td>Password used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>--dev</td><td>Do not apply production optimisations</td>
-  </tr>
-  <tr>
     <td>--host</td><td>Destination host server</td>
   </tr>
   <tr>
@@ -87,9 +81,6 @@ Options:
   </tr>
   <tr>
     <td>--password</td><td>Password used to log into BookingBug</td>
-  </tr>
-  <tr>
-    <td>--dev</td><td>Do not apply production optimisations</td>
   </tr>
   <tr>
     <td>--host</td><td>Destination host server</td>
