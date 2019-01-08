@@ -27,22 +27,22 @@ Options:
 
 <table>
   <tr>
-    <td>\-\-email</td><td>Email address used to log into BookingBug</td>
+    <td>--email</td><td>Email address used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>\-\-password</td><td>Password used to log into BookingBug</td>
+    <td>--password</td><td>Password used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>\-\-dev</td><td>Do not apply production optimisations</td>
+    <td>--dev</td><td>Do not apply production optimisations</td>
   </tr>
   <tr>
-    <td>\-\-host</td><td>Destination host server</td>
+    <td>--host</td><td>Destination host server</td>
   </tr>
   <tr>
-    <td>\-\-companyId</td><td>Destination company</td>
+    <td>--companyId</td><td>Destination company</td>
   </tr>
   <tr>
-    <td>\-\-port</td><td>HTTP port to use</td>
+    <td>--port</td><td>HTTP port to use</td>
 </table>
 
 ### Uninstall
@@ -55,22 +55,22 @@ Options:
 
 <table>
   <tr>
-    <td>\-\-email</td><td>Email address used to log into BookingBug</td>
+    <td>--email</td><td>Email address used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>\-\-password</td><td>Password used to log into BookingBug</td>
+    <td>--password</td><td>Password used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>\-\-dev</td><td>Do not apply production optimisations</td>
+    <td>--dev</td><td>Do not apply production optimisations</td>
   </tr>
   <tr>
-    <td>\-\-host</td><td>Destination host server</td>
+    <td>--host</td><td>Destination host server</td>
   </tr>
   <tr>
-    <td>\-\-companyId</td><td>Destination company</td>
+    <td>--companyId</td><td>Destination company</td>
   </tr>
   <tr>
-    <td>\-\-port</td><td>HTTP port to use</td>
+    <td>--port</td><td>HTTP port to use</td>
 </table>
 
 ### Tail
@@ -83,21 +83,21 @@ Options:
 
 <table>
   <tr>
-    <td>\-\-email</td><td>Email address used to log into BookingBug</td>
+    <td>--email</td><td>Email address used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>\-\-password</td><td>Password used to log into BookingBug</td>
+    <td>--password</td><td>Password used to log into BookingBug</td>
   </tr>
   <tr>
-    <td>\-\-dev</td><td>Do not apply production optimisations</td>
+    <td>--dev</td><td>Do not apply production optimisations</td>
   </tr>
   <tr>
-    <td>\-\-host</td><td>Destination host server</td>
+    <td>--host</td><td>Destination host server</td>
   </tr>
   <tr>
-    <td>\-\-companyId</td><td>Destination company</td>
+    <td>--companyId</td><td>Destination company</td>
   </tr>
   <tr>
-    <td>\-\-port</td><td>HTTP port to use</td>
+    <td>--port</td><td>HTTP port to use</td>
 </table>
 
