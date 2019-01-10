@@ -17,6 +17,7 @@ async function submitForm(configuration) {
         const filePath = path.join(os.tmpdir(), 'app.zip');
         const readStream = fs.createReadStream(filePath);
         const form = new FormData();
+        logger.info(`host: ${configuration.host}, companyId: ${configuration.companyId}`);
         form.append('file', readStream);
         const options = {
             protocol: configuration.port === 443 ? 'https:' : 'http:',
