@@ -3,9 +3,9 @@ const http = require('http');
 const yargs = require('yargs');
 const axios = require('axios');
 
-const Configuration = require('./configuration');
+const Configuration = require('../classes/Configuration');
 const authenticate = require('./authenticate');
-const logger = require('./logger');
+const logger = require('../classes/logger');
 
 async function uninstallRequest(configuration) {
     logger.info('Started uninstall');

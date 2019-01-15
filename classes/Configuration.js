@@ -4,15 +4,14 @@ const fs = require('fs-extra');
 const path = require('path');
 const inquirer = require('inquirer');
 const Ajv = require('ajv');
-const ajv = new Ajv({verbose: true, extendRefs: true});
-var metaSchema = require('ajv/lib/refs/json-schema-draft-04.json');
-metaSchema.$id = metaSchema.id;
-delete metaSchema.id
-ajv.addMetaSchema(metaSchema);
+const ajv = new Ajv({verbose: true});
 const yargs = require('yargs');
-const axios = require('axios');
 
 const logger = require('./logger');
+
+function readSchema (name) {
+    return fs.readJsonSync(path.join(__dirname, `../config/schema/${name}.schema.json`));
+}
 
 class Configuration {
     constructor(rootPath, argv) {
@@ -25,7 +24,6 @@ class Configuration {
 
         this._validateManifest();
         this._validateCustomObjects();
-        this._validateScripts();
 
         this.bbugrcPath = path.join(process.cwd(), '.bbugrc');
 
@@ -48,7 +46,7 @@ class Configuration {
     }
 
     _validateManifest(){
-        const schema = fs.readJsonSync(path.join(__dirname, './schema/manifest.schema.json'));
+        const schema = readSchema('manifest');
         const valid = ajv.validate(schema, this.manifest);
         if (!valid) {
             logger.fatal('manifest.json validation error');
@@ -58,24 +56,13 @@ class Configuration {
     }
 
     _validateCustomObjects() {
-        this._validate('object/manifest.schema.json', 'objects', 'manifest.json');
-        this._validate('object/fields.schema.json', 'objects', 'fields.json');
-        this._validate('object/relations.schema.json', 'objects', 'relations.json');
-    }
-
-    _validateScripts() {
-        this._validate('script/manifest.schema.json', 'script_packs', 'manifest.json');
-    }
-
-    _validate(schemaFile, type, file) {
-        const schema = fs.readJsonSync(path.join(__dirname, 'node_modules', '@bookingbug', 'app-manifest', schemaFile));
-        if (this.manifest[type]) {
-            this.manifest[type].forEach((folder) => {
-                const filePath = path.join(process.cwd(), folder, file);
-                const fields = fs.readJsonSync(filePath);
+        const schema = readSchema('custom-object-fields');
+        if (this.manifest.objects) {
+            this.manifest.objects.forEach((object) => {
+                const fields = fs.readJsonSync(path.join(process.cwd(), object, 'fields.json'));
                 const valid = ajv.validate(schema, fields);
                 if (!valid) {
-                    logger.fatal(`${filePath} validation error`);
+                    logger.fatal(`${object}/fields.json validation error`);
                     logger.fatal(ajv.errorsText());
                     process.exit(0);
                 }
@@ -84,7 +71,7 @@ class Configuration {
     }
 
     isDev(){
-        this.dev === true;
+        return this.dev === true;
     }
 
     _mapSchemaToQuestions(schema) {

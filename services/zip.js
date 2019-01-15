@@ -4,7 +4,7 @@ const os = require('os');
 const archiver = require('archiver');
 const archive = archiver('zip');
 
-const logger = require('./logger');
+const logger = require('../classes/logger');
 
 async function zip() {
     return new Promise((resolve, reject) => {

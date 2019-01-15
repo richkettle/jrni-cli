@@ -3,13 +3,13 @@ const os = require('os');
 const fs = require('fs');
 const FormData = require('form-data');
 
-const Configuration = require('./configuration');
+const Configuration = require('../classes/Configuration');
 const bundle = require('./bundle');
 const zip = require('./zip');
 const authenticate = require('./authenticate');
 const configureApp = require('./configure-app');
 const createEntry = require('./create-entry');
-const logger = require('./logger');
+const logger = require('../classes/logger');
 
 async function submitForm(configuration) {
     return new Promise((resolve, reject) => {

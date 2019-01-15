@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-const install = require('./install');
-const initialize = require('./initialize');
-const tail = require('./tail');
-const logger = require('./logger');
-const uninstall = require('./uninstall');
+const install = require('./services/install');
+const initialize = require('./services/initialize');
+const tail = require('./services/tail');
+const logger = require('./classes/logger');
+const uninstall = require('./services/uninstall');
 
-const newOptions = require('./new-options.json');
-const defaultOptions = require('./default-options.json');
+const newOptions = require('./config/options/new-options.json');
+const defaultOptions = require('./config/options/default-options.json');
 
 const yargs = require('yargs');
 const fs = require('fs-extra');
@@ -41,4 +41,3 @@ yargs
     .command('uninstall', 'Uninstall a app', defaultOptions, uninstall)
     .config(config)
     .argv;
-

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const logger = require('./logger');
+const logger = require('../classes/logger');
 
 async function configureApp(configuration) {
     logger.info('Started config');

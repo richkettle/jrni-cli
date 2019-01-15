@@ -6,7 +6,7 @@ const util = require('util');
 const writeFile = util.promisify(fs.writeFile);
 const axios = require('axios');
 
-const logger = require('./logger');
+const logger = require('../classes/logger');
 
 async function promptForCompany(companies, configuration, cb) {
     const questions = [{

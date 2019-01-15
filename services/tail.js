@@ -3,15 +3,15 @@ const http = require('http');
 const yargs = require('yargs');
 const axios = require('axios');
 
-const Configuration = require('./configuration');
+const Configuration = require('../classes/Configuration');
 const authenticate = require('./authenticate');
-const logger = require('./logger');
+const logger = require('../classes/logger');
 
 let shutdown = false;
 
 const delay = ms => new Promise(r => setTimeout(r, ms));
 
-async function getLogs(configuration, start_time = 0) {
+async function getLogs (configuration, start_time = 0) {
     const protocol = configuration.port === 443 ? 'https' : 'http';
     const end_time = new Date().getTime();
     const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}/logs?start_time=${start_time}&end_time=${end_time}`;
@@ -28,8 +28,8 @@ async function getLogs(configuration, start_time = 0) {
         });
         const json = response.data;
         json.forEach((logs) => {
-            joinedLines = logs.reduce((joined, line) => joined + line.message, '');
-            if (joinedLines != '') console.log(joinedLines);
+            const joinedLines = logs.reduce((joined, line) => joined + line.message, '');
+            if (joinedLines) console.log(joinedLines);
         });
         await delay(2000);
         if (shutdown) {
@@ -37,7 +37,7 @@ async function getLogs(configuration, start_time = 0) {
         } else {
             await getLogs(configuration, end_time);
         }
-    } catch(error) {
+    } catch (error) {
         if (error.response) {
             throw error.response.data;
         } else {
@@ -46,11 +46,11 @@ async function getLogs(configuration, start_time = 0) {
     }
 }
 
-function handleSignal() {
+function handleSignal () {
     shutdown = true;
 }
 
-module.exports = async function(argv) {
+module.exports = async function (argv) {
     try {
         const projectRootPath = process.cwd();
         const configuration = new Configuration(projectRootPath, argv);
@@ -62,7 +62,7 @@ module.exports = async function(argv) {
         logger.info('Tailing logs');
         console.log('');
         await getLogs(configuration);
-    } catch(error) {
+    } catch (error) {
         logger.fatal(error);
     }
 }
