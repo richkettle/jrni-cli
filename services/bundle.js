@@ -7,7 +7,7 @@ const path = require('path');
 const logger = require('../classes/logger');
 
 function resolve (folder) {
-    return path.resolve(__dirname, '/../node_modules', folder)
+    return path.resolve(__dirname, '../node_modules', folder)
 }
 
 async function bundle (configuration) {
