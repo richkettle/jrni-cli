@@ -13,6 +13,7 @@ async function zip() {
         output.on('close', function () {
             logger.info(archive.pointer() + ' total bytes');
             logger.info('Completed zip');
+            // logger.info(os.tmpdir());
             resolve();
         });
         archive.on('warning', function (err) {

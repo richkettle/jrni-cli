@@ -7,7 +7,7 @@ const logger = require('./classes/logger');
 const uninstall = require('./services/uninstall');
 
 const newOptions = require('./config/options/new-options.json');
-const defaultOptions = require('./config/options/default-options.json');
+const loginOptions = require('./config/options/login-options.json');
 
 const yargs = require('yargs');
 const fs = require('fs-extra');
@@ -28,16 +28,16 @@ const tailBuilder = (tailYargs) => {
             describe: 'Name of script',
             type: 'string'
         })
-        .options(defaultOptions)
+        .options(loginOptions)
 }
 
 const config = fs.readJsonSync(path.join(process.cwd(), '.bbugrc'), {throws: false}) || {};
 
 yargs
     .usage('Usage: $0 <command>')
-    .command(['$0', 'install'], 'Package and install app', defaultOptions, install)
+    .command(['$0', 'install'], 'Package and install app', loginOptions, install)
+    .command('uninstall', 'Uninstall a app', loginOptions, uninstall)
     .command('new <dir>', 'Initialize a new app', newBuilder, initialize)
     .command('tail', 'Show script logs', tailBuilder, tail)
-    .command('uninstall', 'Uninstall a app', defaultOptions, uninstall)
     .config(config)
     .argv;

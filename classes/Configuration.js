@@ -9,8 +9,8 @@ const yargs = require('yargs');
 
 const logger = require('./logger');
 
-function readSchema (name) {
-    return fs.readJsonSync(path.join(__dirname, `../config/schema/${name}.schema.json`));
+function readSchema (filename) {
+    return fs.readJsonSync(path.join(__dirname, `../config/schema/${filename}.schema.json`));
 }
 
 class Configuration {

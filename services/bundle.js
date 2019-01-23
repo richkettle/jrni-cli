@@ -123,7 +123,7 @@ async function bundle (configuration) {
             webpack(config, (err, stats) => {
                 if (err) reject(err);
                 if (stats.compilation.errors && stats.compilation.errors.length > 0) {
-                    for (i = 0; i < stats.compilation.errors.length; i++) {
+                    for (let i = 0; i < stats.compilation.errors.length; i++) {
                         logger.fatal(stats.compilation.errors[i]);
                     }
                     reject('Webpack error');
@@ -131,7 +131,7 @@ async function bundle (configuration) {
                     reject(stats.toJson().errors);
                 } else {
                     if (stats.hasWarnings()) logger.warn(stats.toJson().warnings);
-                    stats.toString().split("\n").forEach(logger.info);
+                    logger.info(stats.toString());
                     logger.info('Completed webpack bundle');
                     resolve();
                 }
