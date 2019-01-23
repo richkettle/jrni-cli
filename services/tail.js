@@ -14,14 +14,14 @@ const delay = ms => new Promise(r => setTimeout(r, ms));
 async function getLogs (configuration, start_time = 0) {
     const protocol = configuration.port === 443 ? 'https' : 'http';
     const end_time = new Date().getTime();
-    const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}/logs?start_time=${start_time}&end_time=${end_time}`;
+    const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.appId}/logs?start_time=${start_time}&end_time=${end_time}`;
     try {
         const response = await axios({
             method: 'get',
             url: URL,
             baseURL: `${protocol}://${configuration.host}:${configuration.port}`,
             headers: {
-                'App-Id': configuration.appId,
+                'App-Id': configuration.clientId,
                 'Auth-Token': configuration.authToken
             },
             responseType: 'json'

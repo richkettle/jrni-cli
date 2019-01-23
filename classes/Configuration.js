@@ -17,24 +17,29 @@ class Configuration {
     constructor(rootPath, argv) {
 
         this.rootPath = rootPath;
-
-        this._validateAppStructure();
-
         this.manifest = require(path.resolve(this.rootPath, 'manifest.json'));
 
+        // checks
+        this._validateAppStructure();
         this._validateManifest();
         this._validateCustomObjects();
 
-        this.bbugrcPath = path.join(process.cwd(), '.bbugrc');
-
+        // login
+        this.host = argv.host;
+        this.port = argv.port;
         this.email = argv.email;
         this.password = argv.password;
-        this.host = argv.host;
+
+        // install
+        this.clientId = '302e48d75f4b55016aaf2c81f5ddf80f039e3f863277';
         this.companyId = argv.companyId && argv.companyId.toString();
-        this.port = argv.port;
+        this.appId = this.manifest.unique_name;
+
+        // webpack
         this.dev = argv.dev;
-        this.name = this.manifest.unique_name;
-        this.appId = '302e48d75f4b55016aaf2c81f5ddf80f039e3f863277';
+
+        // app config
+        this.bbugrcPath = path.join(process.cwd(), '.bbugrc');
         this.configSchema = fs.readJsonSync(path.join(process.cwd(), 'config.json'), { throws: false });
     }
 

@@ -23,10 +23,10 @@ async function submitForm(configuration) {
             protocol: configuration.port === 443 ? 'https:' : 'http:',
             host: configuration.host,
             port: configuration.port || 443,
-            path: `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}`,
+            path: `/api/v1/admin/${configuration.companyId}/apps/${configuration.appId}`,
             method: 'PUT',
             headers: {
-                'App-Id': configuration.appId,
+                'App-Id': configuration.clientId,
                 'Auth-Token': configuration.authToken
             }
         }

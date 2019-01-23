@@ -24,8 +24,11 @@ const createFiles = (argv) => {
     fs.mkdirpSync(argv.dir)
     const manifest = {
         bbAppManifestVersion: '1.0',
-        name: argv.name,
+        // FIXME disambiguate as id and name
+        unique_name: argv.appId,
+        name: argv.unique_name,
         author: argv.author,
+        version: '0.1',
         panels: [],
         objects: [],
         scripts: [],

@@ -10,14 +10,14 @@ const logger = require('../classes/logger');
 async function uninstallRequest(configuration) {
     logger.info('Started uninstall');
     const protocol = configuration.port === 443 ? 'https' : 'http';
-    const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.name}`;
+    const URL = `/api/v1/admin/${configuration.companyId}/apps/${configuration.appId}`;
     try {
         const response = await axios({
             method: 'delete',
             url: URL,
             baseURL: `${protocol}://${configuration.host}:${configuration.port}`,
             headers: {
-                'App-Id': configuration.appId,
+                'App-Id': configuration.clientId,
                 'Auth-Token': configuration.authToken
             }
         });

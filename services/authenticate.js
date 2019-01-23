@@ -36,7 +36,7 @@ async function authenticate(configuration) {
             baseURL: `${protocol}://${configuration.host}:${configuration.port}`,
             data: data,
             headers: {
-                'App-Id': configuration.appId,
+                'App-Id': configuration.clientId,
                 'Content-Type': 'application/json',
                 'Content-Length': data.length
             },

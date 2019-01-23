@@ -1,6 +1,6 @@
 {
-  "name": {
-    "describe": "Name used to identify app",
+  "appId": {
+    "describe": "Application ID (unique_name)",
     "type": "string"
   },
   "author": {
