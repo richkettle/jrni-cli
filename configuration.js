@@ -48,13 +48,7 @@ class Configuration {
     }
 
     _validateManifest(){
-        const schema = fs.readJsonSync(path.join(__dirname, './schema/manifest.schema.json'));
-        const valid = ajv.validate(schema, this.manifest);
-        if (!valid) {
-            logger.fatal('manifest.json validation error');
-            logger.fatal(ajv.errorsText());
-            process.exit(0);
-        }
+        this.validate('manifest.schema.json', '', 'manifest.json');
     }
 
     _validateCustomObjects() {
