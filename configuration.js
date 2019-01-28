@@ -48,7 +48,7 @@ class Configuration {
     }
 
     _validateManifest(){
-        this.validate('manifest.schema.json', '', 'manifest.json');
+        this._validate('manifest.schema.json', null, 'manifest.json')
     }
 
     _validateCustomObjects() {
@@ -63,17 +63,25 @@ class Configuration {
 
     _validate(schemaFile, type, file) {
         const schema = fs.readJsonSync(path.join(__dirname, 'node_modules', '@bookingbug', 'app-manifest', schemaFile));
-        if (this.manifest[type]) {
+        if (!type) {
+            this._validateFile('', file, schema);
+        } else if (this.manifest[type]) {
             this.manifest[type].forEach((folder) => {
-                const filePath = path.join(process.cwd(), folder, file);
-                const fields = fs.readJsonSync(filePath);
-                const valid = ajv.validate(schema, fields);
-                if (!valid) {
-                    logger.fatal(`${filePath} validation error`);
-                    logger.fatal(ajv.errorsText());
-                    process.exit(0);
-                }
+                this._validateFile(folder, file, schema);
             });
+        }
+    }
+
+    _validateFile(folder, file, schema) {
+        const filePath = path.join(process.cwd(), folder, file);
+        if (fs.existsSync(filePath)) {
+            const fields = fs.readJsonSync(filePath);
+            const valid = ajv.validate(schema, fields);
+            if (!valid) {
+                logger.fatal(`${filePath} validation error`);
+                logger.fatal(ajv.errorsText());
+                process.exit(0);
+            }
         }
     }
 
