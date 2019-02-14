@@ -73,7 +73,12 @@ async function bundle(configuration) {
                 },
                 {
                     test: /\.scss$/,
-                    use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+                    use: [
+                        path.resolve(__dirname, 'node_modules', 'style-loader'),
+                        MiniCssExtractPlugin.loader,
+                        path.resolve(__dirname, 'node_modules', 'css-loader'),
+                        path.resolve(__dirname, 'node_modules', 'sass-loader')
+                    ]
                 },
                 {
                     test: /.*\.html$/,
@@ -111,7 +116,7 @@ async function bundle(configuration) {
     }
 
     return new Promise((resolve, reject) => {
-        if (Object.keys(config.entry).length == 0) {
+        if (Object.keys(config.entry).length === 0) {
             logger.info('Skipping webpack bundle');
             resolve();
         } else {
