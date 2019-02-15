@@ -1,9 +1,7 @@
 const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
-
 const logger = require('./logger');
 
 async function bundle(configuration) {
@@ -37,10 +35,7 @@ async function bundle(configuration) {
                 exclude: [],
                 watch: false
             }),
-            new WebpackBar(),
-            new MiniCssExtractPlugin({
-                filename: 'panel.css',
-            }),
+            new WebpackBar()
         ],
         module: {
             rules: [
@@ -73,7 +68,11 @@ async function bundle(configuration) {
                 },
                 {
                     test: /\.scss$/,
-                    use: ['style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+                    use: [
+                        path.resolve(__dirname, 'node_modules', 'style-loader'),
+                        path.resolve(__dirname, 'node_modules', 'css-loader'),
+                        path.resolve(__dirname, 'node_modules', 'sass-loader')
+                    ]
                 },
                 {
                     test: /.*\.html$/,
@@ -111,7 +110,7 @@ async function bundle(configuration) {
     }
 
     return new Promise((resolve, reject) => {
-        if (Object.keys(config.entry).length == 0) {
+        if (Object.keys(config.entry).length === 0) {
             logger.info('Skipping webpack bundle');
             resolve();
         } else {
