@@ -1,7 +1,7 @@
 {
-  "name": "@bookingbug/bbug-apps-cli",
+  "name": "@jrni/hourglass-cli",
   "version": "0.0.5",
-  "description": "BookingBug Apps CLI",
+  "description": "JRNI Hourglass Apps CLI",
   "main": "index.js",
   "bin": "./index.js",
   "pkg": {
@@ -15,7 +15,7 @@
     "bookingbug",
     "apps"
   ],
-  "author": "dev@bookingbug.com",
+  "author": "dev@jrni.com",
   "license": "ISC",
   "dependencies": {
     "@bookingbug/app-manifest": "0.0.2",
