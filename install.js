@@ -59,10 +59,13 @@ async function packageAndInstall(argv) {
         await createEntry(configuration);
         await bundle(configuration);
         await zip();
-        await submitForm(configuration);
-        if (configuration.appConfig) {
-            await configureApp(configuration);
+        if (configuration.doInstall) {
+            await submitForm(configuration);
+            if (configuration.appConfig) {
+                await configureApp(configuration);
+            }
         }
+
     } catch(error) {
         if (error.response && error.response.data) {
             logger.fatal(error.response.data.error || error.response.data);
