@@ -1,10 +1,10 @@
-# bbug-apps-cli
+# hourglass-cli
 
 ## Installation
 
 Requires node 8 or greater.
 
-```npm install -g```
+```npm install -g @jrni/hourglass-cli```
 
 ## Options
 
@@ -21,7 +21,7 @@ re-enter options upon re-triggering commands for a given app project.
 Builds and installs an app package to the BookingBug engine. Run the command in the app project
 directory.
 
-```bbug-apps-cli install [options]```
+```hourglass-cli install [options]```
 
 Options:
 
@@ -46,7 +46,7 @@ Options:
 
 Removes an app package from the BookingBug engine.
 
-```bbug-apps-cli uninstall [options]```
+```hourglass-cli uninstall [options]```
 
 Options:
 
@@ -71,7 +71,7 @@ Options:
 
 Display the script logs for an app package.
 
-```bbug-apps-cli tail [options]```
+```hourglass-cli tail [options]```
 
 Options:
 
