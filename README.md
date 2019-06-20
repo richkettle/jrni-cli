@@ -18,7 +18,7 @@ re-enter options upon re-triggering commands for a given app project.
 
 ### Install
 
-Builds and installs an app package to the BookingBug engine. Run the command in the app project
+Builds and installs an app package to the BookingBug engine. Run the command in the Jext app project
 directory.
 
 ```hourglass-cli install [options]```
