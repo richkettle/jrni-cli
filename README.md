@@ -2,9 +2,11 @@
 
 ## Installation
 
-Requires node 8 or greater.
+Requires node 8 or greater. See [Downloading and installing Nodejs and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ```npm install -g @jrni/hourglass-cli```
+
+If you see permission errors when trying to install see [Resolving EACCES permissions errors when installing packages globally](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally)
 
 ## Options
 
