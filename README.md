@@ -1,4 +1,4 @@
-# hourglass-cli
+# jrni-cli
 
 ## Installation
 
