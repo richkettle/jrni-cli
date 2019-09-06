@@ -23,16 +23,16 @@ re-enter options upon re-triggering commands for a given app project.
 Builds and installs an app package to the BookingBug engine. Run the command in the Jext app project
 directory.
 
-```hourglass-cli install [options]```
+```jrni-cli install [options]```
 
 Options:
 
 <table>
   <tr>
-    <td>--email</td><td>Email address used to log into BookingBug</td>
+    <td>--email</td><td>Email address used to log into JRNI</td>
   </tr>
   <tr>
-    <td>--password</td><td>Password used to log into BookingBug</td>
+    <td>--password</td><td>Password used to log into JRNI</td>
   </tr>
   <tr>
     <td>--host</td><td>Destination host server</td>
@@ -48,16 +48,16 @@ Options:
 
 Removes an app package from the BookingBug engine.
 
-```hourglass-cli uninstall [options]```
+```jrni-cli uninstall [options]```
 
 Options:
 
 <table>
   <tr>
-    <td>--email</td><td>Email address used to log into BookingBug</td>
+    <td>--email</td><td>Email address used to log into JRNI</td>
   </tr>
   <tr>
-    <td>--password</td><td>Password used to log into BookingBug</td>
+    <td>--password</td><td>Password used to log into JRNI</td>
   </tr>
   <tr>
     <td>--host</td><td>Destination host server</td>
@@ -73,16 +73,16 @@ Options:
 
 Display the script logs for an app package.
 
-```hourglass-cli tail [options]```
+```jrni-cli tail [options]```
 
 Options:
 
 <table>
   <tr>
-    <td>--email</td><td>Email address used to log into BookingBug</td>
+    <td>--email</td><td>Email address used to log into JRNI</td>
   </tr>
   <tr>
-    <td>--password</td><td>Password used to log into BookingBug</td>
+    <td>--password</td><td>Password used to log into JRNI</td>
   </tr>
   <tr>
     <td>--host</td><td>Destination host server</td>
