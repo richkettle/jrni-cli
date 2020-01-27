@@ -1,6 +1,6 @@
 {
   "name": "@jrni/hourglass-cli",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "JRNI Hourglass Apps CLI",
   "main": "index.js",
   "bin": "./index.js",
